@@ -107,6 +107,9 @@ public class KeybindList
 
             //Set ID
             newButton.GetComponent<InputButton>().id = key.id;
+
+            //Set target graphic
+            newButton.GetComponent<Button>().targetGraphic = newButton.GetComponent<Image>();
         }
     }
 

@@ -5,14 +5,14 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class InputManagerEditor : Editor
 {
-    SerializedProperty configPath, defaultsPath, templateButton, infoText, sceneHasKeybindButtons;
+    SerializedProperty configPath, defaultsPath, templateButton, sceneHasKeybindButtons, cancelKeyCode;
 
     void OnEnable()
     {
         configPath = serializedObject.FindProperty("configPath");
         defaultsPath = serializedObject.FindProperty("defaultsPath");
-        infoText = serializedObject.FindProperty("infoTextContent");
         sceneHasKeybindButtons = serializedObject.FindProperty("sceneHasKeybindButtons");
+        cancelKeyCode = serializedObject.FindProperty("cancelKeyCode");
     }
 
     public override void OnInspectorGUI()
@@ -31,7 +31,7 @@ public class InputManagerEditor : Editor
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
         
         if(sceneHasKeybindButtons.boolValue) {
-            EditorGUILayout.PropertyField(infoText);
+            EditorGUILayout.PropertyField(cancelKeyCode);
             if(GUILayout.Button("Generate Keybind Buttons")) {
                 CreateTag();
                 input.controlList.generateButtons();

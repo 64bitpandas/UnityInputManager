@@ -13,13 +13,18 @@ public class InputButton : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//Initialize input manager
 		try {
 			input = GameObject.FindObjectOfType<InputManager>();
 		} catch {
 			throw new NullReferenceException("InputManager not found. Did you add it to your scene?");
 		}
 
+		//Define click action
 		GetComponent<Button>().onClick.AddListener(ClickAction);
+
+		//Get current keybind
+		this.GetComponentInChildren<Text>().text = input.controlList.getKeybind(id).keyCode;
 	}
 	
 	// Update is called once per frame
@@ -28,7 +33,7 @@ public class InputButton : MonoBehaviour {
 	}
 
 	void ClickAction() {
-		input.WaitForKey(id, this);
+        StartCoroutine(input.WaitForKey(id, this));
 	}
 
 

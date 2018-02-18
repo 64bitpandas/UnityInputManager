@@ -14,6 +14,9 @@ public class InputManager : MonoBehaviour {
 	///Dynamic path to controls.cfg
 	public string configPath, defaultsPath;
 
+	///KeyCode to cancel key selection
+	public KeyCode cancelKeyCode = KeyCode.Backspace;
+
     ///Event for key detection
     private Event currentEvent;
 
@@ -23,7 +26,7 @@ public class InputManager : MonoBehaviour {
 
 	[SerializeField]
 	///Text to display in InfoText
-	private string infoTextContent;
+	private string infoTextContent; 
 
 	///Full list of custom keybinds. Initialize with default controls.
 	public KeybindList controlList = new KeybindList();
@@ -32,6 +35,7 @@ public class InputManager : MonoBehaviour {
 	/// Awake is called when the script instance is being loaded.
 	/// </summary>
 	void Awake() {
+		infoTextContent = "Press " + cancelKeyCode + " to cancel key selection";
         configPath = Application.dataPath + "/controls.cfg";
 		defaultsPath = Application.dataPath + "/defaultcontrols.cfg";
 
@@ -75,6 +79,15 @@ public class InputManager : MonoBehaviour {
         }
 	}
 
+	/// <summary>
+	/// OnGUI is called for rendering and handling GUI events.
+	/// This function can be called multiple times per frame (one call per event).
+	/// </summary>
+	void OnGUI()
+	{
+        currentEvent = Event.current;
+	}
+
 	///Writes controls from ControlList to the config file.
 	public void WriteControls(string filePath) {
 		using(var writer = new StreamWriter(File.Create(filePath))) {
@@ -97,6 +110,7 @@ public class InputManager : MonoBehaviour {
     public IEnumerator WaitForKey(int id, InputButton btnRef)
     {
 
+		Debug.Log("Test");
 		//0 is keybind label, 1 is name label
         Text[] btnTexts = btnRef.GetComponentsInChildren<Text>();
 
@@ -115,14 +129,13 @@ public class InputManager : MonoBehaviour {
         {
             if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse))
             {
-                if (currentEvent.keyCode == KeyCode.Backspace)
+                if (currentEvent.keyCode == cancelKeyCode)
                 {
-                    btnTexts[0].text = controlList.getKeybind(id).keyCode;
                     infoText.enabled = false;
                     Debug.Log("Key Selection cancelled");
                     yield break;
                 }
-                else if (currentEvent.keyCode != KeyCode.Backspace && currentEvent.keyCode != KeyCode.None)
+                else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None)
                 {
                     btnTexts[0].text = currentEvent.keyCode.ToString();
                     Debug.Log("Key Selection successful");
