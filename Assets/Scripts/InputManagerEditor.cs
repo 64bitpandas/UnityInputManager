@@ -5,13 +5,13 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class InputManagerEditor : Editor
 {
-    SerializedProperty configPath, defaultsPath, templateButton, INFO_TEXT, sceneHasKeybindButtons;
+    SerializedProperty configPath, defaultsPath, templateButton, infoText, sceneHasKeybindButtons;
 
     void OnEnable()
     {
         configPath = serializedObject.FindProperty("configPath");
         defaultsPath = serializedObject.FindProperty("defaultsPath");
-        INFO_TEXT = serializedObject.FindProperty("INFO_TEXT");
+        infoText = serializedObject.FindProperty("infoTextContent");
         sceneHasKeybindButtons = serializedObject.FindProperty("sceneHasKeybindButtons");
     }
 
@@ -21,6 +21,7 @@ public class InputManagerEditor : Editor
         serializedObject.Update();
 
 		InputManager input = (InputManager)target;
+        input.LoadControls(input.defaultsPath);
 
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(configPath);
@@ -30,10 +31,9 @@ public class InputManagerEditor : Editor
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
         
         if(sceneHasKeybindButtons.boolValue) {
-            EditorGUILayout.PropertyField(INFO_TEXT);
+            EditorGUILayout.PropertyField(infoText);
             if(GUILayout.Button("Generate Keybind Buttons")) {
                 CreateTag();
-                Debug.Log("TEST");
                 input.controlList.generateButtons();
             }
             if(GUILayout.Button("Nuke All Buttons"))
@@ -44,8 +44,10 @@ public class InputManagerEditor : Editor
 		EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
 		if(GUILayout.Button("Edit Default Controls"))
             UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(@input.defaultsPath, 2);
-		if(GUILayout.Button("Save Changes"))
+		if(GUILayout.Button("Save Changes")) {
             input.LoadControls(input.defaultsPath);
+            input.WriteControls(input.configPath);
+        }
 
         
         serializedObject.ApplyModifiedProperties();
