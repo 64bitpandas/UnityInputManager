@@ -15,12 +15,11 @@ public class InputManagerEditor : Editor
         cancelKeyCode = serializedObject.FindProperty("cancelKeyCode");
     }
 
-    public override void OnInspectorGUI()
-    {
+    public override void OnInspectorGUI() {
 
         serializedObject.Update();
 
-		InputManager input = (InputManager)target;
+        InputManager input = (InputManager)target;
         input.LoadControls(input.defaultsPath);
 
         EditorGUI.BeginDisabledGroup(true);
@@ -29,27 +28,29 @@ public class InputManagerEditor : Editor
         EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
-        
-        if(sceneHasKeybindButtons.boolValue) {
+
+        if (sceneHasKeybindButtons.boolValue) {
             EditorGUILayout.PropertyField(cancelKeyCode);
-            if(GUILayout.Button("Generate Keybind Buttons")) {
+            if (GUILayout.Button("Generate Keybind Buttons"))
+            {
                 CreateTag();
                 input.controlList.generateButtons();
             }
-            if(GUILayout.Button("Nuke All Buttons"))
-                foreach(GameObject obj in GameObject.FindGameObjectsWithTag("KeybindButton"))
+            if (GUILayout.Button("Nuke All Buttons"))
+                foreach (GameObject obj in GameObject.FindGameObjectsWithTag("KeybindButton"))
                     DestroyImmediate(obj);
         }
-        
-		EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
-		if(GUILayout.Button("Edit Default Controls"))
+
+        EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
+        if (GUILayout.Button("Edit Default Controls"))
             UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(@input.defaultsPath, 2);
-		if(GUILayout.Button("Save Changes")) {
+        if (GUILayout.Button("Save Changes"))
+        {
             input.LoadControls(input.defaultsPath);
             input.WriteControls(input.configPath);
         }
 
-        
+
         serializedObject.ApplyModifiedProperties();
     }
 
@@ -66,15 +67,13 @@ public class InputManagerEditor : Editor
 
         // First check if it is not already present
         bool found = false;
-        for (int i = 0; i < tagsProp.arraySize; i++)
-        {
+        for (int i = 0; i < tagsProp.arraySize; i++) {
             SerializedProperty t = tagsProp.GetArrayElementAtIndex(i);
             if (t.stringValue.Equals(s)) { found = true; return; }
         }
 
         // if not found, add it
-        if (!found)
-        {
+        if (!found) {
             tagsProp.InsertArrayElementAtIndex(0);
             SerializedProperty n = tagsProp.GetArrayElementAtIndex(0);
             n.stringValue = s;

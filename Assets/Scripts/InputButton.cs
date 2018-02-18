@@ -12,7 +12,7 @@ public class InputButton : MonoBehaviour {
 	private InputManager input;
 
 	// Use this for initialization
-	void Start () {
+	void Start() {
 		//Initialize input manager
 		try {
 			input = GameObject.FindObjectOfType<InputManager>();
@@ -26,14 +26,14 @@ public class InputButton : MonoBehaviour {
 		//Get current keybind
 		this.GetComponentInChildren<Text>().text = input.controlList.getKeybind(id).keyCode;
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-		
+	void Update() {
+
 	}
 
 	void ClickAction() {
-        StartCoroutine(input.WaitForKey(id, this));
+		StartCoroutine(input.WaitForKey(id, this));
 	}
 
 
