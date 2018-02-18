@@ -17,12 +17,9 @@ public class InputManager : MonoBehaviour {
     ///Event for key detection
     private Event currentEvent;
 
-	///List of InputButtons in menu. Can be empty!
-	private InputButton[] buttons;
-
 	[SerializeField]
 	///Does this scene have keybind buttons?
-	private bool hasButtons;
+	private bool sceneHasKeybindButtons;
 
 	[SerializeField]
 	///Text to display in InfoText
@@ -56,19 +53,26 @@ public class InputManager : MonoBehaviour {
 
 			WriteControls(configPath);
 		}
+	}
 
-		//Create buttons
-		if(hasButtons) {
-            controlList.generateButtons();
-            buttons = GameObject.FindObjectsOfType<InputButton>();
-
-            try {
+	/// <summary>
+	/// Start is called on the frame when a script is enabled just before
+	/// any of the Update methods is called the first time.
+	/// </summary>
+	void Start()
+	{
+        //Create buttons
+        if (sceneHasKeybindButtons)
+        {
+            try
+            {
                 GameObject.Find("InfoText").GetComponent<Text>().enabled = false;
             }
-            catch {
+            catch
+            {
                 throw new NullReferenceException("InfoText not found! Create a Text object named 'InfoText'.");
             }
-		}
+        }
 	}
 
 	///Writes controls from ControlList to the config file.
@@ -135,7 +139,6 @@ public class InputManager : MonoBehaviour {
 
         }
     }
-
 }
 
 ///Keybind object representing one custom keybind configuration.
@@ -212,8 +215,31 @@ public class KeybindList {
 	}
 
 	public void generateButtons() {
-		foreach (Keybind key in keys) {
+		
+		//Get (or not) template button
+		GameObject templateButton;
+		try {
+			templateButton = GameObject.Find("TemplateButton");
+		} catch {
+			throw new NullReferenceException("TemplateButton could not be found in the scene! Remember to add it in.");
+		}
 
+		int count = 1;
+		foreach (Keybind key in keys) {
+			GameObject newButton = GameObject.Instantiate(templateButton, templateButton.transform.parent);
+			//Set label name
+			newButton.GetComponentsInChildren<Text>()[1].text = key.name;
+			newButton.name = key.name;
+
+			//Set tag
+			newButton.tag = "KeybindButton";
+
+			//Translate for easier viewing
+			newButton.transform.Translate(Vector3.down * 50 * count);
+			count++;
+
+			//Set ID
+			newButton.GetComponent<InputButton>().id = key.id;
 		}
 	}
 
