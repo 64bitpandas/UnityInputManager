@@ -14,6 +14,20 @@ public class InputManager : MonoBehaviour {
 	///Dynamic path to controls.cfg
 	public string configPath, defaultsPath;
 
+    ///Event for key detection
+    private Event currentEvent;
+
+	///List of InputButtons in menu. Can be empty!
+	private InputButton[] buttons;
+
+	[SerializeField]
+	///Does this scene have keybind buttons?
+	private bool hasButtons;
+
+	[SerializeField]
+	///Text to display in InfoText
+	private string INFO_TEXT;
+
 	///Full list of custom keybinds. Initialize with default controls.
 	public KeybindList controlList = new KeybindList();
 
@@ -42,6 +56,19 @@ public class InputManager : MonoBehaviour {
 
 			WriteControls(configPath);
 		}
+
+		//Create buttons
+		if(hasButtons) {
+            controlList.generateButtons();
+            buttons = GameObject.FindObjectsOfType<InputButton>();
+
+            try {
+                GameObject.Find("InfoText").GetComponent<Text>().enabled = false;
+            }
+            catch {
+                throw new NullReferenceException("InfoText not found! Create a Text object named 'InfoText'.");
+            }
+		}
 	}
 
 	///Writes controls from ControlList to the config file.
@@ -59,6 +86,55 @@ public class InputManager : MonoBehaviour {
 			if(key.Length > 0)
             	controlList.addKeybind(key);
 	}
+
+    ///While key is being set: Waits for a valid input
+    public IEnumerator WaitForKey(int id, InputButton btnRef)
+    {
+
+		//0 is keybind label, 1 is name label
+        Text[] btnTexts = btnRef.GetComponentsInChildren<Text>();
+
+		//Text that indicates when selection is occurring
+		Text infoText;
+
+		try {
+			infoText = GameObject.Find("InfoText").GetComponent<Text>();
+			infoText.text = INFO_TEXT;
+			infoText.enabled = true;
+		} catch {
+			throw new NullReferenceException("InfoText not found! Create a Text object named 'InfoText'.");
+		}
+
+        while (true)
+        {
+            if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse))
+            {
+                if (currentEvent.keyCode == KeyCode.Backspace)
+                {
+                    btnTexts[0].text = controlList.getKeybind(id).keyCode;
+                    infoText.enabled = false;
+                    Debug.Log("Key Selection cancelled");
+                    yield break;
+                }
+                else if (currentEvent.keyCode != KeyCode.Backspace && currentEvent.keyCode != KeyCode.None)
+                {
+                    btnTexts[0].text = currentEvent.keyCode.ToString();
+                    Debug.Log("Key Selection successful");
+					controlList.getKeybind(id).keyCode = btnTexts[0].text;
+                    Debug.Log("Set key " + id + " to " + btnTexts[0].text);
+                    infoText.enabled = false;
+
+					//Save to file
+					WriteControls(configPath);
+
+                    yield break;
+                }
+                else yield return null;
+            }
+            else yield return null;
+
+        }
+    }
 
 }
 
@@ -133,6 +209,12 @@ public class KeybindList {
 
 	public void reset() {
 		keys.RemoveRange(0, keys.Count);
+	}
+
+	public void generateButtons() {
+		foreach (Keybind key in keys) {
+
+		}
 	}
 
 	public override string ToString() {

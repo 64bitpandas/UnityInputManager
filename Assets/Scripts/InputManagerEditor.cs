@@ -5,12 +5,14 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class InputManagerEditor : Editor
 {
-    SerializedProperty configPath, defaultsPath;
+    SerializedProperty configPath, defaultsPath, templateButton, sceneHasKeybindButtons, INFO_TEXT;
 
     void OnEnable()
     {
         configPath = serializedObject.FindProperty("configPath");
         defaultsPath = serializedObject.FindProperty("defaultsPath");
+        sceneHasKeybindButtons = serializedObject.FindProperty("hasButtons");
+        INFO_TEXT = serializedObject.FindProperty("INFO_TEXT");
     }
 
     public override void OnInspectorGUI()
@@ -20,6 +22,11 @@ public class InputManagerEditor : Editor
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(configPath);
         EditorGUILayout.PropertyField(defaultsPath);
+        EditorGUI.EndDisabledGroup();
+
+        EditorGUILayout.PropertyField(sceneHasKeybindButtons);
+        EditorGUI.BeginDisabledGroup(!sceneHasKeybindButtons.boolValue);
+        EditorGUILayout.PropertyField(INFO_TEXT);
         EditorGUI.EndDisabledGroup();
         
 		EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
