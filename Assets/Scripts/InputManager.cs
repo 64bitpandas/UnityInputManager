@@ -12,7 +12,7 @@ using System.Collections;
 public class InputManager : MonoBehaviour {
 	
 	///Dynamic path to controls.cfg
-	private string configPath, defaultsPath;
+	public string configPath, defaultsPath;
 
 	///Full list of custom keybinds. Initialize with default controls.
 	public KeybindList controlList = new KeybindList();

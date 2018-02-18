@@ -5,25 +5,30 @@ using UnityEditor;
 [CanEditMultipleObjects]
 public class InputManagerEditor : Editor
 {
-    SerializedProperty keybindList;
+    SerializedProperty configPath, defaultsPath;
 
     void OnEnable()
     {
-        keybindList = serializedObject.FindProperty("test");
-		Debug.Log(keybindList);
+        configPath = serializedObject.FindProperty("configPath");
+        defaultsPath = serializedObject.FindProperty("defaultsPath");
     }
 
     public override void OnInspectorGUI()
     {
 		InputManager input = (InputManager)target;
 
-		DrawDefaultInspector();
+        EditorGUI.BeginDisabledGroup(true);
+        EditorGUILayout.PropertyField(configPath);
+        EditorGUILayout.PropertyField(defaultsPath);
+        EditorGUI.EndDisabledGroup();
+        
+		EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
+		if(GUILayout.Button("Edit Default Controls"))
+            UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(@input.defaultsPath, 2);
+		if(GUILayout.Button("Save Changes"))
+            input.LoadControls(input.defaultsPath);
+
         serializedObject.Update();
-        // EditorGUILayout.PropertyField(keybindList);
-		EditorGUILayout.LabelField("Foo");
-		if(GUILayout.Button("Add Keybind"));
-		if(GUILayout.Button("Save Changes"));
-			
         serializedObject.ApplyModifiedProperties();
     }
 }
