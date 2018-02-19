@@ -8,6 +8,9 @@ Custom input manager that allows users to set custom keybinds during runtime.
  - **Easy To Customize** Customize default controls and keybind names effortlessly with the custom Inspector Panel.
  - **XBOX Controller Compatible** Assign keybinds using your XBOX controller!
 
+## Documentation
+ **Read the docs [here](Docs/).**
+ 
 ## Main Contributors
  - [Ben Cuan](https://github.com/dbqeo)
 
