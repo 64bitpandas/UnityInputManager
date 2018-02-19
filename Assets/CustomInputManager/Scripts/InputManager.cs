@@ -177,20 +177,20 @@ public class InputManager : MonoBehaviour {
 
 	///<summary> Returns true if the given key is pressed down</summary>
 	public bool GetKey(string name) {
-		return Input.GetKey(GetKeyCode(name));
+		return Input.GetKey(GetKeyCode(name).ToLower());
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
-		return Input.GetKeyDown(GetKeyCode(name));
+		return Input.GetKeyDown(GetKeyCode(name).ToLower());
 	}
 
 	///<summary> Returns true on the given key's release</summary>
 	public bool GetKeyUp(string name) {
-		return Input.GetKeyUp(GetKeyCode(name));
+		return Input.GetKeyUp(GetKeyCode(name).ToLower());
 	}
 
-    ///<summary> Returns the KeyCode corresponding to the keybind with given name</summary>
+    ///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
     public string GetKeyCode(string name) {
 		return controlList.getKeybind(name).keyCode;
 	}
@@ -200,4 +200,10 @@ public class InputManager : MonoBehaviour {
 		return controlList.getKeybind(id).keyCode;
 	}
 
+    ///<summary> Wipes user preferences and copies default configuration to user configuration</summary>
+    public void ResetControls() {
+		LoadControls(defaultsPath);
+		WriteControls(configPath);
+		Debug.Log("Reset Controls");
+	}
 }

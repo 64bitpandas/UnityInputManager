@@ -50,3 +50,4 @@ The API is very similar to the default Input, and currently includes the followi
  - `GetKeyUp(string name) : bool` Returns true when the key is released.
  - `GetKeyCode(string name) : string`  Returns the KeyCode corresponding to the keybind with given name.
  - `GetKeyCode(int id) : string`  Returns the KeyCode corresponding to the keybind with given ID.
+ - `ResetControls() : void` Copies default configuration to user configuration.

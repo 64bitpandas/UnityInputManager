@@ -50,8 +50,7 @@ public class InputManagerEditor : Editor
             UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(@input.defaultsPath, 2);
         if (GUILayout.Button("Save Changes"))
         {
-            input.LoadControls(input.defaultsPath);
-            input.WriteControls(input.configPath);
+            input.ResetControls();
         }
 
 
