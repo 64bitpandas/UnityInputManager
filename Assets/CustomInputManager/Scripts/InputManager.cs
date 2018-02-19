@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 ///Methods for Control changing menu, with integrated InputManager by Ben C.
 ///Since 2017 December
@@ -38,8 +39,13 @@ public class InputManager : MonoBehaviour {
 	/// </summary>
 	void Awake() {
 		infoTextContent = "Press " + cancelKeyCode + " to cancel key selection";
-		configPath = Application.dataPath + "/controls.cfg";
-		defaultsPath = Application.dataPath + "/defaultcontrols.cfg";
+		configPath = Application.dataPath + "/CustomInputManager/Config/controls.cfg";
+		defaultsPath = Application.dataPath + "/CustomInputManager/Config/defaultcontrols.cfg";
+
+		if (!Directory.Exists(Application.dataPath + "/CustomInputManager/Config")) {
+			Debug.Log("Creating Config folder...");
+			AssetDatabase.CreateFolder("Assets/CustomInputManager", "Config");
+		}
 
 		//validate controls file
 		try {
@@ -52,7 +58,7 @@ public class InputManager : MonoBehaviour {
 				Debug.Log("Loaded controls from defaultcontrols.cfg");
 			} else {
 				Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
-				controlList.addKeybind(0, "SampleKey", "w");
+				controlList.addKeybind(0, "SampleKey", "Space");
 				WriteControls(defaultsPath);
 			}
 

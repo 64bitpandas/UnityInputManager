@@ -4,7 +4,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
-/Assets/controls.cfg
+/Assets/CustomInputManager/Config/*
 
 # Visual Studio 2015 cache directory
 /.vs/
