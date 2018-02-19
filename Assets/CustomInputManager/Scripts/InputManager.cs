@@ -12,16 +12,12 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class InputManager : MonoBehaviour {
 
-
 	///Dynamic path to controls.cfg
 	public string configPath, defaultsPath;
 
 	[SerializeField]
 	///KeyCode to cancel key selection
 	private KeyCode cancelKeyCode = KeyCode.Backspace;
-
-	///Event for key detection
-	private Event currentEvent;
 
 	[SerializeField]
 	///Does this scene have keybind buttons?
@@ -31,8 +27,18 @@ public class InputManager : MonoBehaviour {
 	///Text to display in InfoText
 	private string infoTextContent;
 
+	[SerializeField]
 	///Full list of custom keybinds. Initialize with default controls.
-	public KeybindList controlList = new KeybindList();
+	private KeybindList controlList = new KeybindList();
+
+	///Event for key detection
+	private Event currentEvent;
+
+	/*
+	####################
+	# Internal Methods #
+	####################
+	 */
 
 	/// <summary>
 	/// Awake is called when the script instance is being loaded.
@@ -87,6 +93,18 @@ public class InputManager : MonoBehaviour {
 	/// </summary>
 	void OnGUI() {
 		currentEvent = Event.current;
+	}
+
+	/// <summary>
+	/// Returns the Input Manager in the scene 
+	/// Assign to an InputManager object in your script.
+	/// </summary>
+	public static InputManager GetInputManager() {
+		try {
+			return (InputManager)FindObjectOfType(typeof(InputManager));
+		} catch {
+			throw new NullReferenceException("InputManager could not be found!");
+		}
 	}
 
 	///Writes controls from ControlList to the config file.
@@ -147,8 +165,9 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-
-
+	public void GenerateButtons() {
+		controlList.generateButtons();
+	}
 
 	/*
 	#######
@@ -158,17 +177,27 @@ public class InputManager : MonoBehaviour {
 
 	///<summary> Returns true if the given key is pressed down</summary>
 	public bool GetKey(string name) {
-		return Input.GetKey(controlList.getKeybind(name).keyCode);
+		return Input.GetKey(GetKeyCode(name));
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
-		return Input.GetKeyDown(controlList.getKeybind(name).keyCode);
+		return Input.GetKeyDown(GetKeyCode(name));
 	}
 
 	///<summary> Returns true on the given key's release</summary>
 	public bool GetKeyUp(string name) {
-		return Input.GetKeyUp(controlList.getKeybind(name).keyCode);
+		return Input.GetKeyUp(GetKeyCode(name));
+	}
+
+    ///<summary> Returns the KeyCode corresponding to the keybind with given name</summary>
+    public string GetKeyCode(string name) {
+		return controlList.getKeybind(name).keyCode;
+	}
+
+    ///<summary> Returns the KeyCode corresponding to the keybind with given ID</summary>
+    public string GetKeyCode(int id) {
+		return controlList.getKeybind(id).keyCode;
 	}
 
 }

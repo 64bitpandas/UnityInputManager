@@ -24,7 +24,7 @@ public class InputButton : MonoBehaviour {
 		GetComponent<Button>().onClick.AddListener(ClickAction);
 
 		//Get current keybind
-		this.GetComponentInChildren<Text>().text = input.controlList.getKeybind(id).keyCode;
+		this.GetComponentInChildren<Text>().text = input.GetKeyCode(id);
 	}
 
 	// Update is called once per frame

@@ -35,7 +35,7 @@ public class InputManagerEditor : Editor
             if (GUILayout.Button("Generate Keybind Buttons"))
             {
                 CreateTag();
-                input.controlList.generateButtons();
+                input.GenerateButtons();
             }
             if (GUILayout.Button("Nuke All Buttons"))
                 foreach (GameObject obj in GameObject.FindGameObjectsWithTag("KeybindButton"))

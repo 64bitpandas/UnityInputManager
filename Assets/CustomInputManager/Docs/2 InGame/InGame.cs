@@ -11,12 +11,12 @@ public class InGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		input = (InputManager)FindObjectOfType(typeof(InputManager));
+		input = InputManager.GetInputManager();
 		instructionText = (Text)FindObjectOfType(typeof(Text));
 		squareSprite = (SpriteRenderer)FindObjectOfType(typeof(SpriteRenderer));
 
 		//Assign Text
-		instructionText.text = "Press " + input.controlList.getKeybind("SampleKey") + " to change color";
+		instructionText.text = "Press " + input.GetKeyCode("SampleKey") + " to change color";
 	}
 	
 	// Update is called once per frame
