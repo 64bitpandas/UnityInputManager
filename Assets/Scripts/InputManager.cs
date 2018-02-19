@@ -11,11 +11,13 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class InputManager : MonoBehaviour {
 
+
 	///Dynamic path to controls.cfg
 	public string configPath, defaultsPath;
 
+	[SerializeField]
 	///KeyCode to cancel key selection
-	public KeyCode cancelKeyCode = KeyCode.Backspace;
+	private KeyCode cancelKeyCode = KeyCode.Backspace;
 
 	///Event for key detection
 	private Event currentEvent;
@@ -138,4 +140,29 @@ public class InputManager : MonoBehaviour {
 			} else yield return null;
 		}
 	}
+
+
+
+
+	/*
+	#######
+	# API #
+	#######	
+	 */
+
+	///<summary> Returns true if the given key is pressed down</summary>
+	public bool GetKey(string name) {
+		return Input.GetKey(controlList.getKeybind(name).name);
+	}
+
+	///<summary> Returns true on the given key's initial press</summary>
+	public bool GetKeyDown(string name) {
+		return Input.GetKeyDown(controlList.getKeybind(name).name);
+	}
+
+	///<summary> Returns true on the given key's release</summary>
+	public bool GetKeyUp(string name) {
+		return Input.GetKeyUp(controlList.getKeybind(name).name);
+	}
+
 }

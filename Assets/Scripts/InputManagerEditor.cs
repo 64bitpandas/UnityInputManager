@@ -27,6 +27,7 @@ public class InputManagerEditor : Editor
         EditorGUILayout.PropertyField(defaultsPath);
         EditorGUI.EndDisabledGroup();
 
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
 
         if (sceneHasKeybindButtons.boolValue) {
@@ -41,7 +42,10 @@ public class InputManagerEditor : Editor
                     DestroyImmediate(obj);
         }
 
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.LabelField("Layout is 'id:name:keybind'.");
+        if(GUILayout.Button("KeyCode Reference"))
+            Application.OpenURL("https://docs.unity3d.com/2018.1/Documentation/ScriptReference/KeyCode.html");
         if (GUILayout.Button("Edit Default Controls"))
             UnityEditorInternal.InternalEditorUtility.OpenFileAtLineExternal(@input.defaultsPath, 2);
         if (GUILayout.Button("Save Changes"))
