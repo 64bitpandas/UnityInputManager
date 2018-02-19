@@ -9,7 +9,7 @@ Custom input manager that allows users to set custom keybinds during runtime.
  - **XBOX Controller Compatible** Assign keybinds using your XBOX controller!
 
 ## Documentation
- **Read the docs [here](Docs/).**
+ **Read the docs [here](Assets/CustomInputManager/Docs/).**
  
 ## Main Contributors
  - [Ben Cuan](https://github.com/dbqeo)
