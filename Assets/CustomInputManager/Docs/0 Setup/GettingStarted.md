@@ -12,7 +12,7 @@ Upon import, a folder named 'CustomInputManager' will be created. In order to ad
 
 Select the object to view the custom Inspector controls for the InputManager script. Here, you can open the default configuration file for editing (it will open the file in your default code editor). 
 
-![InputManager Inspector](../inputmanager.png "Input Manager")
+![InputManager Inspector](inputmanager.PNG "Input Manager")
 
 In the default configuration file, each line corresponds to one custom keybind. The format for each line is `ID:Name:KeyCode`. 
  - ID: Numerical identifier, can be any non-negative number. Each keybind must have a unique ID. The ID is for internal bookkeeping purposes but can also be accessed through the API. 
