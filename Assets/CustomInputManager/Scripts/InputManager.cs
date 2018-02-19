@@ -95,18 +95,6 @@ public class InputManager : MonoBehaviour {
 		currentEvent = Event.current;
 	}
 
-	/// <summary>
-	/// Returns the Input Manager in the scene 
-	/// Assign to an InputManager object in your script.
-	/// </summary>
-	public static InputManager GetInputManager() {
-		try {
-			return (InputManager)FindObjectOfType(typeof(InputManager));
-		} catch {
-			throw new NullReferenceException("InputManager could not be found!");
-		}
-	}
-
 	///Writes controls from ControlList to the config file.
 	public void WriteControls(string filePath) {
 		using(var writer = new StreamWriter(File.Create(filePath))) {
@@ -169,11 +157,24 @@ public class InputManager : MonoBehaviour {
 		controlList.generateButtons();
 	}
 
-	/*
+    /*
 	#######
 	# API #
 	#######	
 	 */
+
+    /// <summary>
+    /// Returns the Input Manager in the scene 
+    /// Assign to an InputManager object in your script.
+    /// </summary>
+    public static InputManager GetInputManager() {
+        try {
+            return (InputManager)FindObjectOfType(typeof(InputManager));
+        }
+        catch {
+            throw new NullReferenceException("InputManager could not be found!");
+        }
+    }
 
 	///<summary> Returns true if the given key is pressed down</summary>
 	public bool GetKey(string name) {

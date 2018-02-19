@@ -32,7 +32,7 @@ In the default configuration file, each line corresponds to one custom keybind. 
 
 ### Step Four: Use API In Your Scripts
 
-The InputManager API is very similar to default unity Input interface, with the difference that it is a nonstatic class. Therefore, you can initialize InputManager using Object.FindObjectOfType, such as in the snippet below:
+The InputManager API is very similar to default unity Input interface, with the difference that it is a nonstatic class. Therefore, you can initialize InputManager using the static convenience method in InputManager, `InputManager.GetInputManager()`.
 
 ```csharp
 private InputManager input;
@@ -40,14 +40,17 @@ private InputManager input;
 ...
 
 void Start () {
-    input = (InputManager)FindObjectOfType(typeof(InputManager));
+    input = InputManager.GetInputManager();
 }
 ```
 
 The API is very similar to the default Input, and currently includes the following methods:
+- `static GetInputManager() : InputManager` Returns the InputManager object in the current scene. Throws a `NullReferenceException` if no InputManager is found.
  - `GetKey(string name) : bool` Returns true if the custom keybind with given name is currently pressed down.
  - `GetKeyDown(string name) : bool` Returns true on initial key press.
  - `GetKeyUp(string name) : bool` Returns true when the key is released.
  - `GetKeyCode(string name) : string`  Returns the KeyCode corresponding to the keybind with given name.
  - `GetKeyCode(int id) : string`  Returns the KeyCode corresponding to the keybind with given ID.
  - `ResetControls() : void` Copies default configuration to user configuration.
+
+Axes and controller support will be added in the next major update.
