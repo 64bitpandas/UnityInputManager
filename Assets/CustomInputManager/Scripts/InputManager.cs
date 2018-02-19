@@ -158,17 +158,17 @@ public class InputManager : MonoBehaviour {
 
 	///<summary> Returns true if the given key is pressed down</summary>
 	public bool GetKey(string name) {
-		return Input.GetKey(controlList.getKeybind(name).name);
+		return Input.GetKey(controlList.getKeybind(name).keyCode);
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
-		return Input.GetKeyDown(controlList.getKeybind(name).name);
+		return Input.GetKeyDown(controlList.getKeybind(name).keyCode);
 	}
 
 	///<summary> Returns true on the given key's release</summary>
 	public bool GetKeyUp(string name) {
-		return Input.GetKeyUp(controlList.getKeybind(name).name);
+		return Input.GetKeyUp(controlList.getKeybind(name).keyCode);
 	}
 
 }
