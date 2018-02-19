@@ -14,4 +14,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation and examples
 - Keybind button generation
 
-[1.0.0]: https://github.com/BananiumLabs/ElectroTab/releases/tag/1.0.0
+[1.0.0]: https://github.com/dbqeo/UnityInputManager/releases/tag/1.0.0
