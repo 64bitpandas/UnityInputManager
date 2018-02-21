@@ -20,7 +20,6 @@ public class InputManagerEditor : Editor
         serializedObject.Update();
 
         InputManager input = (InputManager)target;
-        input.LoadControls(input.defaultsPath);
 
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(configPath);
