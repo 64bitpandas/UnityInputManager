@@ -6,6 +6,8 @@ Welcome to CustomInputManager! This simple guide will get you started on a simpl
 
 You can download the latest release [here](https://github.com/dbqeo/UnityInputManager/releases). Open the Unity package in your project, and follow the instructions in the popup dialog box to import the code in.
 
+**Important Note:** The Unity Package includes XInputDotNet by default. If you are already using XInputDotNet in your project, uncheck the directory in the import screen.
+
 ### Step Two: Configuration
 
 Upon import, a folder named 'CustomInputManager' will be created. In order to add the Input Manager to your scene, add 'Scenes/InputManager.cs' into any object that will not be cloned or destroyed.

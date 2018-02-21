@@ -6,7 +6,8 @@ Custom input manager that allows users to set custom keybinds during runtime.
  - **Cross Platform** InputManager will work in MacOS, Linux, and Windows, both in editor and after build.
  - **Save To File** Custom keybinds save to a configuration file that allows custom keybinds to transfer through multiple restarts.
  - **Easy To Customize** Customize default controls and keybind names effortlessly with the custom Inspector Panel.
- - **XBOX Controller Compatible** Assign keybinds using your XBOX controller! (Coming Soon)
+ - **XBOX Controller Compatible** Assign keybinds using your XBOX controller!
+ - **Multiplayer Support** Create one configuration file for up to four players!
 
 ## Documentation
 
@@ -16,10 +17,15 @@ Custom input manager that allows users to set custom keybinds during runtime.
 
 ## Changelog
 
- **Read the changelog [here](CHANGELOG.md).
- 
+ **Read the changelog [here](CHANGELOG.md).**
+
+## Dependencies
+
+ CustomInputManager depends on [XInputDotNet](https://github.com/speps/XInputDotNet) for XBox Controller Input, which is included in the Unity Package and source. All credit for this code goes to [Rémi Gillig](https://github.com/speps) and the contributors of XInputDotNet.
+
 ## Main Contributors
  - [Ben Cuan](https://github.com/dbqeo)
 
 Package Name: com.dbqeo.inputmanager
-Package Version: 1.0.0
+
+Package Version: 1.1.0
