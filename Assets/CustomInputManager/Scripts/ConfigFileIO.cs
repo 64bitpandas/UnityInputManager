@@ -9,8 +9,10 @@ public class ConfigFileIO {
     ///Dynamic path to controls.cfg
     public string configPath, defaultsPath;
     public KeybindList controlList = new KeybindList();
+    public AxisList axisList;
 
     public ConfigFileIO() {
+        axisList = new AxisList(controlList);
         configPath = Application.dataPath + "/CustomInputManager/Config/controls.cfg";
         defaultsPath = Application.dataPath + "/CustomInputManager/Config/defaultcontrols.cfg";
 
@@ -42,6 +44,7 @@ public class ConfigFileIO {
     public void WriteControls(string filePath) {
         using(var writer = new StreamWriter(File.Create(filePath))) {
             writer.WriteLine(controlList);
+            writer.WriteLine(axisList);
         }
     }
 

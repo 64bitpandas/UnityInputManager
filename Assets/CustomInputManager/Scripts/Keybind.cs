@@ -3,7 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-///List of keybinds
+///Keybind object representing one custom keybind configuration.
+public class Keybind {
+
+    public string name;
+    public string keyCode;
+
+    public Keybind(string newName, string newKeyCode) {
+        name = newName;
+        keyCode = newKeyCode;
+    }
+}
+
+///List of keybinds, contains all methods necessary to access and modify keybinds inside.
 public class KeybindList {
     //List of keybinds for internal use
     private List<Keybind> keys;
@@ -71,7 +83,7 @@ public class KeybindList {
 
             //Set corresponding button
             newButton.GetComponent<InputButton>().buttonName = key.name;
-            
+
             //Translate for easier viewing
             newButton.transform.Translate(Vector3.down * 50 * count);
             count++;
@@ -89,16 +101,4 @@ public class KeybindList {
         return result;
     }
 
-}
-
-///Keybind object representing one custom keybind configuration.
-public class Keybind {
-
-    public string name;
-    public string keyCode;
-
-    public Keybind(string newName, string newKeyCode) {
-        name = newName;
-        keyCode = newKeyCode;
-    }
 }

@@ -27,9 +27,11 @@ public class InputManager : MonoBehaviour {
 	///Text to display in InfoText
 	private string infoTextContent;
 
-	[SerializeField]
 	///Full list of custom keybinds. Initialize with default controls.
 	private KeybindList controlList;
+
+	///Full list of custom axes. Initialize with default controls.
+	private AxisList axisList;
 
 	///Event for key detection
 	private Event currentEvent;
@@ -51,6 +53,7 @@ public class InputManager : MonoBehaviour {
 		//Init ConfigFileIO
 		config = new ConfigFileIO();
 		controlList = config.controlList;
+		axisList = config.axisList;
 		defaultsPath = config.defaultsPath;
 		configPath = config.configPath;
 
@@ -112,6 +115,7 @@ public class InputManager : MonoBehaviour {
 					controlList.getKeybind(name).keyCode = btnTexts[0].text;
 					Debug.Log("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
+					axisList.RefreshList();
 
 					//Save to file
 					config.WriteControls(config.configPath);
