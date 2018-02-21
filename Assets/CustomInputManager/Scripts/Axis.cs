@@ -35,7 +35,7 @@ public class AxisList {
     ///Refreshes axis list based on key list.
     public void RefreshList() {
         foreach (Axis ax in axList) {
-            ax.positiveKey = controlList.getKeybind(ax.name);
+            ax.positiveKey = controlList.GetKeybind(ax.name);
         }
 
         Debug.Log("Refreshed Axis List");
@@ -46,7 +46,7 @@ public class AxisList {
     }
 
     public void AddAxis(string name, string positiveKey, string negativeKey) {
-        axList.Add(new Axis(name, controlList.getKeybind(positiveKey), controlList.getKeybind(negativeKey)));
+        axList.Add(new Axis(name, controlList.GetKeybind(positiveKey), controlList.GetKeybind(negativeKey)));
     }
 
     public void AddAxis(string name, Keybind positiveKey, Keybind negativeKey) {

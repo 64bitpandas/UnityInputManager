@@ -112,7 +112,7 @@ public class InputManager : MonoBehaviour {
 				} else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None) {
 					btnTexts[0].text = currentEvent.keyCode.ToString();
 					Debug.Log("Key Selection successful");
-					controlList.getKeybind(name).keyCode = btnTexts[0].text;
+					controlList.GetKeybind(name).keyCode = btnTexts[0].text;
 					Debug.Log("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
 					axisList.RefreshList();
@@ -127,7 +127,7 @@ public class InputManager : MonoBehaviour {
 	}
 
 	public void GenerateButtons() {
-		controlList.generateButtons();
+		controlList.GenerateButtons();
 	}
 
 	/*
@@ -174,7 +174,7 @@ public class InputManager : MonoBehaviour {
 
 	///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
 	public string GetKeyCode(string name) {
-		return controlList.getKeybind(name).keyCode;
+		return controlList.GetKeybind(name).keyCode;
 	}
 
 	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>

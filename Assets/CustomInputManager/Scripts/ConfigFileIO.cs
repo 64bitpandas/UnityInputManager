@@ -32,7 +32,9 @@ public class ConfigFileIO {
                 Debug.Log("Loaded controls from defaultcontrols.cfg");
             } else {
                 Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
-                controlList.addKeybind("SampleKey", "Space");
+                controlList.AddKeybind("SampleKey", "Space");
+                controlList.AddKeybind("SampleKeyTwo", "W");
+                axisList.AddAxis("SampleAxis", "SampleKey", "SampleKeyTwo");
                 WriteControls(defaultsPath);
             }
 
@@ -51,10 +53,14 @@ public class ConfigFileIO {
     ///Loads controls from the config file to ControlList.
     public void LoadControls(string filePath) {
         string[] keys = File.ReadAllLines(filePath);
-        controlList.reset();
+        controlList.Reset();
         foreach (string key in keys)
-            if (key.Length > 0)
-                controlList.addKeybind(key);
+            if (key.Length > 0 && !key.Contains("#")) {
+                if(key.Contains("AXIS"))
+                    axisList.AddAxis(key);
+                else
+                    controlList.AddKeybind(key);
+            }
 
         // Debug.Log(controlList);
     }

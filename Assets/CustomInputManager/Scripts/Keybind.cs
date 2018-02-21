@@ -24,28 +24,28 @@ public class KeybindList {
         keys = new List<Keybind>();
     }
 
-    public void addKeybind(string name, string keyCode) {
+    public void AddKeybind(string name, string keyCode) {
         keys.Add(new Keybind(name, keyCode));
     }
 
-    public void addKeybind(Keybind newKey) {
+    public void AddKeybind(Keybind newKey) {
         keys.Add(newKey);
     }
 
-    public void addKeybind(string metadata) {
+    public void AddKeybind(string metadata) {
         try {
 
             string name = metadata.Substring(0, metadata.IndexOf(":"));
             metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
 
-            addKeybind(name, metadata);
+            AddKeybind(name, metadata);
         } catch (Exception e) {
             throw new ArgumentException("metadata of invalid format: " + metadata + "\n" + e);
         }
 
     }
 
-    public Keybind getKeybind(string name) {
+    public Keybind GetKeybind(string name) {
         foreach (Keybind key in keys)
             if (key.name.Equals(name))
                 return key;
@@ -53,15 +53,15 @@ public class KeybindList {
         throw new NullReferenceException("Keybind of name " + name + " does not exist.");
     }
 
-    public void removeKeybind(string name) {
-        keys.Remove(getKeybind(name));
+    public void RemoveKeybind(string name) {
+        keys.Remove(GetKeybind(name));
     }
 
-    public void reset() {
+    public void Reset() {
         keys.RemoveRange(0, keys.Count);
     }
 
-    public void generateButtons() {
+    public void GenerateButtons() {
 
         //Get (or not) template button
         GameObject templateButton;
