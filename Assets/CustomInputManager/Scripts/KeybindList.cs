@@ -12,8 +12,8 @@ public class KeybindList {
         keys = new List<Keybind>();
     }
 
-    public void addKeybind(int id, string name, string keyCode) {
-        keys.Add(new Keybind(id, name, keyCode));
+    public void addKeybind(string name, string keyCode) {
+        keys.Add(new Keybind(name, keyCode));
     }
 
     public void addKeybind(Keybind newKey) {
@@ -23,12 +23,10 @@ public class KeybindList {
     public void addKeybind(string metadata) {
         try {
 
-            int id = Int32.Parse(metadata.Substring(0, metadata.IndexOf(":")));
-            metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
             string name = metadata.Substring(0, metadata.IndexOf(":"));
             metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
 
-            addKeybind(id, name, metadata);
+            addKeybind(name, metadata);
         } catch (Exception e) {
             throw new ArgumentException("metadata of invalid format: " + metadata + "\n" + e);
         }
@@ -43,20 +41,8 @@ public class KeybindList {
         throw new NullReferenceException("Keybind of name " + name + " does not exist.");
     }
 
-    public Keybind getKeybind(int id) {
-        foreach (Keybind key in keys)
-            if (key.id == id)
-                return key;
-
-        throw new NullReferenceException("Keybind of id " + id + " does not exist.");
-    }
-
     public void removeKeybind(string name) {
         keys.Remove(getKeybind(name));
-    }
-
-    public void removeKeybind(int id) {
-        keys.Remove(getKeybind(id));
     }
 
     public void reset() {
@@ -83,12 +69,12 @@ public class KeybindList {
             //Set tag
             newButton.tag = "KeybindButton";
 
+            //Set corresponding button
+            newButton.GetComponent<InputButton>().buttonName = key.name;
+            
             //Translate for easier viewing
             newButton.transform.Translate(Vector3.down * 50 * count);
             count++;
-
-            //Set ID
-            newButton.GetComponent<InputButton>().id = key.id;
 
             //Set target graphic
             newButton.GetComponent<Button>().targetGraphic = newButton.GetComponent<Image>();
@@ -98,7 +84,7 @@ public class KeybindList {
     public override string ToString() {
         string result = "";
         foreach (Keybind key in keys)
-            result += key.id + ":" + key.name + ":" + key.keyCode + "\n";
+            result += key.name + ":" + key.keyCode + "\n";
 
         return result;
     }
@@ -107,12 +93,11 @@ public class KeybindList {
 
 ///Keybind object representing one custom keybind configuration.
 public class Keybind {
-    public int id;
+
     public string name;
     public string keyCode;
 
-    public Keybind(int newId, string newName, string newKeyCode) {
-        id = newId;
+    public Keybind(string newName, string newKeyCode) {
         name = newName;
         keyCode = newKeyCode;
     }

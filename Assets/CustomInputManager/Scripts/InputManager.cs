@@ -83,7 +83,7 @@ public class InputManager : MonoBehaviour {
 
 
 	///While key is being set: Waits for a valid input
-	public IEnumerator WaitForKey(int id, InputButton btnRef) {
+	public IEnumerator WaitForKey(string name, InputButton btnRef) {
 
 		Debug.Log("Test");
 		//0 is keybind label, 1 is name label
@@ -109,8 +109,8 @@ public class InputManager : MonoBehaviour {
 				} else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None) {
 					btnTexts[0].text = currentEvent.keyCode.ToString();
 					Debug.Log("Key Selection successful");
-					controlList.getKeybind(id).keyCode = btnTexts[0].text;
-					Debug.Log("Set key " + id + " to " + btnTexts[0].text);
+					controlList.getKeybind(name).keyCode = btnTexts[0].text;
+					Debug.Log("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
 
 					//Save to file
@@ -149,6 +149,15 @@ public class InputManager : MonoBehaviour {
 		return Input.GetKey(GetKeyCode(name).ToLower());
 	}
 
+	///<summary>
+	/// Returns the current value of the axis
+	/// 1 = positive key down, -1 = negative key down.
+	/// Joystick/Gamepad axis values will be somewhere in between.
+	///</summary>
+	public float GetAxis(string name) {
+		return 0;
+	}
+
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
 		return Input.GetKeyDown(GetKeyCode(name).ToLower());
@@ -162,11 +171,6 @@ public class InputManager : MonoBehaviour {
 	///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
 	public string GetKeyCode(string name) {
 		return controlList.getKeybind(name).keyCode;
-	}
-
-	///<summary> Returns the KeyCode corresponding to the keybind with given ID</summary>
-	public string GetKeyCode(int id) {
-		return controlList.getKeybind(id).keyCode;
 	}
 
 	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>

@@ -30,7 +30,7 @@ public class ConfigFileIO {
                 Debug.Log("Loaded controls from defaultcontrols.cfg");
             } else {
                 Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
-                controlList.addKeybind(0, "SampleKey", "Space");
+                controlList.addKeybind("SampleKey", "Space");
                 WriteControls(defaultsPath);
             }
 

@@ -6,8 +6,8 @@ using UnityEngine.UI;
 ///Attached to every button for keybind assignment in the main menu.
 public class InputButton : MonoBehaviour {
 
-	///Button ID, corresponds to the keybind ID
-	public int id;
+	///Button name, corresponds to the keybind name
+	public string buttonName;
 
 	private InputManager input;
 
@@ -24,7 +24,7 @@ public class InputButton : MonoBehaviour {
 		GetComponent<Button>().onClick.AddListener(ClickAction);
 
 		//Get current keybind
-		this.GetComponentInChildren<Text>().text = input.GetKeyCode(id);
+		this.GetComponentInChildren<Text>().text = input.GetKeyCode(buttonName);
 	}
 
 	// Update is called once per frame
@@ -33,7 +33,7 @@ public class InputButton : MonoBehaviour {
 	}
 
 	void ClickAction() {
-		StartCoroutine(input.WaitForKey(id, this));
+		StartCoroutine(input.WaitForKey(buttonName, this));
 	}
 
 
