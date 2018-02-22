@@ -12,6 +12,7 @@ public class ConfigFileIO {
     public AxisList axisList;
 
     public ConfigFileIO() {
+
         axisList = new AxisList(controlList);
         configPath = Application.dataPath + "/CustomInputManager/Config/controls.cfg";
         defaultsPath = Application.dataPath + "/CustomInputManager/Config/defaultcontrols.cfg";
@@ -32,21 +33,27 @@ public class ConfigFileIO {
                 Debug.Log("Loaded controls from defaultcontrols.cfg");
             } else {
                 Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
+                ///Default sample config
                 controlList.AddKeybind("SampleKey", "Space");
                 controlList.AddKeybind("SampleKeyTwo", "W");
                 axisList.AddAxis("SampleAxis", "SampleKey", "SampleKeyTwo");
                 WriteControls(defaultsPath);
             }
 
-            WriteControls(configPath);
+            ResetControls();
         }
     }
 
     ///Writes controls from ControlList to the config file.
     public void WriteControls(string filePath) {
         using(var writer = new StreamWriter(File.Create(filePath))) {
+            if(filePath.Equals(defaultsPath)) {
+                writer.WriteLine("# Please do not delete the sample controls if you wish to run the samples.");
+                writer.WriteLine("# Comments such as these will not be transferred to user configuration.\n");
+            }
             writer.WriteLine(controlList);
             writer.WriteLine(axisList);
+            writer.Close();
         }
     }
 
@@ -56,7 +63,7 @@ public class ConfigFileIO {
         controlList.Reset();
         foreach (string key in keys)
             if (key.Length > 0 && !key.Contains("#")) {
-                if(key.Contains("AXIS"))
+                if (key.Contains("AXIS"))
                     axisList.AddAxis(key);
                 else
                     controlList.AddKeybind(key);

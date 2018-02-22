@@ -25,7 +25,7 @@ public class Axis {
 ///Axis list
 public class AxisList {
 
-    private List<Axis> axList;
+    private List<Axis> axList = new List<Axis>();
     private KeybindList controlList;
 
     public AxisList(KeybindList list) {
@@ -60,6 +60,7 @@ public class AxisList {
             string name = metadata.Substring(0, metadata.IndexOf(":"));
             metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
             string positiveKey = metadata.Substring(0, metadata.IndexOf(":"));
+            metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
 
             AddAxis(name, positiveKey, metadata);
         } catch (Exception e) {
@@ -81,8 +82,8 @@ public class AxisList {
 
     public override string ToString() {
         string result = "";
-        foreach(Axis ax in axList) {
-            result += "AXIS:" + ax.name + ":" + ax.positiveKey + ":" + ax.negativeKey + "\n";
+        foreach (Axis ax in axList) {
+            result += "AXIS:" + ax.name + ":" + ax.positiveKey.name + ":" + ax.negativeKey.name + "\n";
         }
 
         return result;

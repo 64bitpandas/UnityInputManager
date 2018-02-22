@@ -27,12 +27,6 @@ public class InputManager : MonoBehaviour {
 	///Text to display in InfoText
 	private string infoTextContent;
 
-	///Full list of custom keybinds. Initialize with default controls.
-	private KeybindList controlList;
-
-	///Full list of custom axes. Initialize with default controls.
-	private AxisList axisList;
-
 	///Event for key detection
 	private Event currentEvent;
 
@@ -52,8 +46,6 @@ public class InputManager : MonoBehaviour {
 
 		//Init ConfigFileIO
 		config = new ConfigFileIO();
-		controlList = config.controlList;
-		axisList = config.axisList;
 		defaultsPath = config.defaultsPath;
 		configPath = config.configPath;
 
@@ -112,10 +104,10 @@ public class InputManager : MonoBehaviour {
 				} else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None) {
 					btnTexts[0].text = currentEvent.keyCode.ToString();
 					Debug.Log("Key Selection successful");
-					controlList.GetKeybind(name).keyCode = btnTexts[0].text;
+					config.controlList.GetKeybind(name).keyCode = btnTexts[0].text;
 					Debug.Log("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
-					axisList.RefreshList();
+					config.axisList.RefreshList();
 
 					//Save to file
 					config.WriteControls(config.configPath);
@@ -127,7 +119,7 @@ public class InputManager : MonoBehaviour {
 	}
 
 	public void GenerateButtons() {
-		controlList.GenerateButtons();
+		config.controlList.GenerateButtons();
 	}
 
 	/*
@@ -174,7 +166,7 @@ public class InputManager : MonoBehaviour {
 
 	///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
 	public string GetKeyCode(string name) {
-		return controlList.GetKeybind(name).keyCode;
+		return config.controlList.GetKeybind(name).keyCode;
 	}
 
 	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>
