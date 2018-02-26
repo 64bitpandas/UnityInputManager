@@ -50,6 +50,7 @@ public class ConfigFileIO {
             if(filePath.Equals(defaultsPath)) {
                 writer.WriteLine("# Please do not delete the sample controls if you wish to run the samples.");
                 writer.WriteLine("# Comments such as these will not be transferred to user configuration.\n");
+                writer.WriteLine("# Refer to the documentation for valid controller keybinds. \n");
             }
             writer.WriteLine(controlList);
             writer.WriteLine(axisList);

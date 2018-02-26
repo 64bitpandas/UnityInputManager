@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using XInputDotNetPure;
 
 ///Axis object containing one positive and one negative button. These buttons can be remapped to different keys.
 ///Axis can also be used with Joystick axes.
@@ -15,10 +16,26 @@ public class Axis {
     ///Negative button (when pressed, returns value of -1)
     public Keybind negativeKey;
 
+    ///Controller axis (optional)
+    public string controllerAxis;
+
     public Axis(string name, Keybind positiveKey, Keybind negativeKey) {
         this.name = name;
         this.positiveKey = positiveKey;
         this.negativeKey = negativeKey;
+    }
+
+    public Axis(string name, Keybind positiveKey, Keybind negativeKey, string controllerAxis): this(name, positiveKey, negativeKey) {
+        this.controllerAxis = controllerAxis;
+    }
+
+    ///<summary> Does this Keybind include a map to a controller button? </summary>
+    public bool HasControllerInput() {
+        return controllerAxis.Length > 0;
+    }
+
+    public override string ToString() {
+        return name;
     }
 }
 

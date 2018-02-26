@@ -5,6 +5,7 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using XInputDotNetPure;
 
 ///Methods for Control changing menu, with integrated InputManager by Ben C.
 ///Since 2017 December
@@ -32,6 +33,12 @@ public class InputManager : MonoBehaviour {
 
 	///Config file interface
 	private ConfigFileIO config;
+
+	///Gamepad information
+	private bool playerIndexSet = false;
+	private PlayerIndex playerIndex;
+	private GamePadState state;
+	private GamePadState prevState;
 
 	/*
 	####################
@@ -74,6 +81,28 @@ public class InputManager : MonoBehaviour {
 	/// </summary>
 	void OnGUI() {
 		currentEvent = Event.current;
+	}
+
+	/// <summary>
+	/// Update is called every frame, if the MonoBehaviour is enabled.
+	/// </summary>
+	void Update() {
+		// Find a PlayerIndex, for a single player game
+		// Will find the first controller that is connected and use it
+		if (!playerIndexSet || !prevState.IsConnected) {
+			for (int i = 0; i < 4; ++i) {
+				PlayerIndex testPlayerIndex = (PlayerIndex)i;
+				GamePadState testState = GamePad.GetState(testPlayerIndex);
+				if (testState.IsConnected) {
+					Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
+					playerIndex = testPlayerIndex;
+					playerIndexSet = true;
+				}
+			}
+		}
+
+		prevState = state;
+		state = GamePad.GetState(playerIndex);
 	}
 
 
@@ -120,6 +149,10 @@ public class InputManager : MonoBehaviour {
 
 	public void GenerateButtons() {
 		config.controlList.GenerateButtons();
+	}
+
+	public GamePadState GetGamePadState() {
+		return state;
 	}
 
 	/*

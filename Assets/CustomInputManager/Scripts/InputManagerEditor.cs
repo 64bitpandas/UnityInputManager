@@ -28,6 +28,7 @@ public class InputManagerEditor : Editor
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
+        
 
         if (sceneHasKeybindButtons.boolValue) {
             EditorGUILayout.PropertyField(cancelKeyCode);

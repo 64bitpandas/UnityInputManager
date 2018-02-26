@@ -2,16 +2,32 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using XInputDotNetPure;
 
 ///Keybind object representing one custom keybind configuration.
 public class Keybind {
 
     public string name;
     public string keyCode;
+    public ButtonState controllerKeyCode;
 
     public Keybind(string newName, string newKeyCode) {
         name = newName;
         keyCode = newKeyCode;
+    }
+
+    ///Controller support
+    public Keybind(string newName, string newKeyCode, ButtonState newControllerKeyCode): this(newName, newKeyCode) {
+        controllerKeyCode = newControllerKeyCode;
+    }
+
+    ///<summary> Does this Keybind include a map to a controller button? </summary>
+    public bool HasControllerInput() {
+        return Enum.IsDefined(typeof(ButtonState), controllerKeyCode);
+    }
+
+    public override string ToString() {
+        return name;
     }
 }
 
@@ -28,6 +44,10 @@ public class KeybindList {
         keys.Add(new Keybind(name, keyCode));
     }
 
+    public void AddKeybind(string name, string keyCode, ButtonState controllerKeyCode) {
+        keys.Add(new Keybind(name, keyCode, controllerKeyCode));
+    }
+
     public void AddKeybind(Keybind newKey) {
         keys.Add(newKey);
     }
@@ -38,7 +58,15 @@ public class KeybindList {
             string name = metadata.Substring(0, metadata.IndexOf(":"));
             metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
 
-            AddKeybind(name, metadata);
+            //Controller input detected 
+            if (metadata.Contains(":")) {
+                string key = metadata.Substring(0, metadata.IndexOf(":"));
+                metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
+                AddKeybind(name, key, GamepadStates.ToButtonState(metadata, InputManager.GetInputManager().GetGamePadState()));
+            } else {
+                AddKeybind(name, metadata);
+            }
+
         } catch (Exception e) {
             throw new ArgumentException("metadata of invalid format: " + metadata + "\n" + e);
         }
