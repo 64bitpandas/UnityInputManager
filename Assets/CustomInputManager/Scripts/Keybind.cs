@@ -9,7 +9,7 @@ public class Keybind {
 
     public string name;
     public string keyCode;
-    public ButtonState controllerKeyCode;
+    public string controllerKeyCode = "";
 
     public Keybind(string newName, string newKeyCode) {
         name = newName;
@@ -17,13 +17,13 @@ public class Keybind {
     }
 
     ///Controller support
-    public Keybind(string newName, string newKeyCode, ButtonState newControllerKeyCode): this(newName, newKeyCode) {
+    public Keybind(string newName, string newKeyCode, string newControllerKeyCode): this(newName, newKeyCode) {
         controllerKeyCode = newControllerKeyCode;
     }
 
     ///<summary> Does this Keybind include a map to a controller button? </summary>
     public bool HasControllerInput() {
-        return Enum.IsDefined(typeof(ButtonState), controllerKeyCode);
+        return controllerKeyCode.Length > 0;
     }
 
     public override string ToString() {
@@ -44,7 +44,7 @@ public class KeybindList {
         keys.Add(new Keybind(name, keyCode));
     }
 
-    public void AddKeybind(string name, string keyCode, ButtonState controllerKeyCode) {
+    public void AddKeybind(string name, string keyCode, string controllerKeyCode) {
         keys.Add(new Keybind(name, keyCode, controllerKeyCode));
     }
 
@@ -62,7 +62,7 @@ public class KeybindList {
             if (metadata.Contains(":")) {
                 string key = metadata.Substring(0, metadata.IndexOf(":"));
                 metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
-                AddKeybind(name, key, GamepadStates.ToButtonState(metadata, InputManager.GetInputManager().GetGamePadState()));
+                AddKeybind(name, key, metadata);
             } else {
                 AddKeybind(name, metadata);
             }
@@ -124,7 +124,7 @@ public class KeybindList {
     public override string ToString() {
         string result = "";
         foreach (Keybind key in keys)
-            result += key.name + ":" + key.keyCode + "\n";
+            result += key.name + ":" + key.keyCode + ":" + key.controllerKeyCode + "\n";
 
         return result;
     }

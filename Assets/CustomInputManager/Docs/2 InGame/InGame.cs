@@ -16,7 +16,7 @@ public class InGame : MonoBehaviour {
 		squareSprite = (SpriteRenderer)FindObjectOfType(typeof(SpriteRenderer));
 
 		//Assign Text
-		instructionText.text = "Press " + input.GetKeyCode("SampleKey") + " to change color";
+		instructionText.text = "Press " + input.GetKeyCode("SampleKey") + " to change color\n" + "Or press " + input.GetControllerButton("SampleKey") + " on controller";
 	}
 	
 	// Update is called once per frame

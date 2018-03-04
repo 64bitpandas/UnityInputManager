@@ -17,7 +17,7 @@ public class Axis {
     public Keybind negativeKey;
 
     ///Controller axis (optional)
-    public string controllerAxis;
+    public string controllerAxis = "";
 
     public Axis(string name, Keybind positiveKey, Keybind negativeKey) {
         this.name = name;
@@ -66,6 +66,10 @@ public class AxisList {
         axList.Add(new Axis(name, controlList.GetKeybind(positiveKey), controlList.GetKeybind(negativeKey)));
     }
 
+    public void AddAxis(string name, string positiveKey, string negativeKey, string controllerAxis) {
+        axList.Add(new Axis(name, controlList.GetKeybind(positiveKey), controlList.GetKeybind(negativeKey), controllerAxis));
+    }
+
     public void AddAxis(string name, Keybind positiveKey, Keybind negativeKey) {
         axList.Add(new Axis(name, positiveKey, negativeKey));
     }
@@ -79,7 +83,15 @@ public class AxisList {
             string positiveKey = metadata.Substring(0, metadata.IndexOf(":"));
             metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
 
-            AddAxis(name, positiveKey, metadata);
+            //Check for controller
+            if (metadata.Contains(":")) {
+                string negativeKey = metadata.Substring(0, metadata.IndexOf(":"));
+                metadata = metadata.Remove(0, metadata.IndexOf(":")+ 1);
+                AddAxis(name, positiveKey, negativeKey, metadata);
+            }
+            
+            else
+                AddAxis(name, positiveKey, metadata);
         } catch (Exception e) {
             throw new ArgumentException("metadata of invalid format: " + metadata + "\n" + e);
         }
@@ -100,7 +112,7 @@ public class AxisList {
     public override string ToString() {
         string result = "";
         foreach (Axis ax in axList) {
-            result += "AXIS:" + ax.name + ":" + ax.positiveKey.name + ":" + ax.negativeKey.name + "\n";
+            result += "AXIS:" + ax.name + ":" + ax.positiveKey.name + ":" + ax.negativeKey.name + ":" + ax.controllerAxis + "\n";
         }
 
         return result;

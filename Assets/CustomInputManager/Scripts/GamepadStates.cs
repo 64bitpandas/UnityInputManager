@@ -41,7 +41,7 @@ public class GamepadStates {
         throw new NullReferenceException("Button " + stateName + " could not be found");
     }
 
-    public static float ToAxisValue(GamePadState state, string axisName) {
+    public static float ToAxisValue(string axisName, GamePadState state) {
 
         switch (axisName.ToLower()) {
 

@@ -151,10 +151,6 @@ public class InputManager : MonoBehaviour {
 		config.controlList.GenerateButtons();
 	}
 
-	public GamePadState GetGamePadState() {
-		return state;
-	}
-
 	/*
 	#######
 	# API #
@@ -173,8 +169,14 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-	///<summary> Returns true if the given key is pressed down</summary>
+	///<summary> Returns true if the given key or controller button is pressed down</summary>
 	public bool GetKey(string name) {
+
+		if (config.controlList.GetKeybind(name).HasControllerInput()&&
+			state.IsConnected &&
+			GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)== ButtonState.Pressed)
+			return true;
+
 		return Input.GetKey(GetKeyCode(name).ToLower());
 	}
 
@@ -182,9 +184,20 @@ public class InputManager : MonoBehaviour {
 	/// Returns the current value of the axis
 	/// 1 = positive key down, -1 = negative key down.
 	/// Joystick/Gamepad axis values will be somewhere in between.
+	/// Joystick is checked first, if joystick returns zero or is disconnected, then defaults to keyboard value.
 	///</summary>
 	public float GetAxis(string name) {
-		return 0;
+		float result = 0f;
+
+		//gamepad connected
+		if (state.IsConnected)
+			result = GamepadStates.ToAxisValue(GetAxisName(name), state);
+
+		if (result == 0f)
+			result = 	(GamepadStates.ToButtonState(GetAxisNegative(name), state)== ButtonState.Pressed)? -1f : 
+						(GamepadStates.ToButtonState(GetAxisPositive(name), state)== ButtonState.Pressed)? 1f : 0f;
+
+		return result;
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
@@ -200,6 +213,26 @@ public class InputManager : MonoBehaviour {
 	///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
 	public string GetKeyCode(string name) {
 		return config.controlList.GetKeybind(name).keyCode;
+	}
+
+	///<summary> Returns the Controller button corresponding to the keybind with given name. No case conversion.</summary>
+	public string GetControllerButton(string name) {
+		return config.controlList.GetKeybind(name).controllerKeyCode;
+	}
+
+	///<summary> Returns the controller axis corresponding to the custom axis with given name. No case conversion.</summary>
+	public string GetAxisName(string name) {
+		return config.axisList.GetAxis(name).controllerAxis;
+	}
+
+	///<summary> Returns the KeyCode corresponding to the positive key of the custom axis.</summary>
+	public string GetAxisPositive(string name) {
+		return config.axisList.GetAxis(name).positiveKey.name;
+	}
+
+	///<summary> Returns the KeyCode corresponding to the negative key of the custom axis.</summary>
+	public string GetAxisNegative(string name) {
+		return config.axisList.GetAxis(name).negativeKey.name;
 	}
 
 	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>

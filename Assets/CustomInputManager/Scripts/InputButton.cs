@@ -23,8 +23,9 @@ public class InputButton : MonoBehaviour {
 		//Define click action
 		GetComponent<Button>().onClick.AddListener(ClickAction);
 
-		//Get current keybind
-		this.GetComponentInChildren<Text>().text = input.GetKeyCode(buttonName);
+		//Get current keybind if not a template button
+		if(buttonName.Length > 0)
+			this.GetComponentInChildren<Text>().text = input.GetKeyCode(buttonName);
 	}
 
 	// Update is called once per frame

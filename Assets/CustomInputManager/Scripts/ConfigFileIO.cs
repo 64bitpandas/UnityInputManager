@@ -34,9 +34,9 @@ public class ConfigFileIO {
             } else {
                 Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
                 ///Default sample config
-                controlList.AddKeybind("SampleKey", "Space");
-                controlList.AddKeybind("SampleKeyTwo", "W");
-                axisList.AddAxis("SampleAxis", "SampleKey", "SampleKeyTwo");
+                controlList.AddKeybind("SampleKey", "Space", "A");
+                controlList.AddKeybind("SampleKeyTwo", "W", "X");
+                axisList.AddAxis("SampleAxis", "SampleKey", "SampleKeyTwo", "LeftStickX");
                 WriteControls(defaultsPath);
             }
 
