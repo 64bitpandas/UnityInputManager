@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.0] - 2018-2-19
 
-### Added *Unity Package \com.dbqeo.inputmanager*.
+### Added *Unity Package com.dbqeo.inputmanager*.
 
 - Config file IO
 - Public scripting API for key input
@@ -14,4 +14,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation and examples
 - Keybind button generation
 
+## [1.1.0] - 2018-3-25
+
+### Updated *Unity Package com.dbqeo.inputmanager*.
+
+ - Axis Support
+ - XBox Controller Support
+ - Documentation for axes and controllers
+ - Update API reference
+
 [1.0.0]: https://github.com/dbqeo/UnityInputManager/releases/tag/1.0.0
+[1.1.0]: https://github.com/dbqeo/UnityInputManager/releases/tag/1.1.0

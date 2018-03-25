@@ -7,13 +7,15 @@ Custom input manager that allows users to set custom keybinds during runtime.
  - **Save To File** Custom keybinds save to a configuration file that allows custom keybinds to transfer through multiple restarts.
  - **Easy To Customize** Customize default controls and keybind names effortlessly with the custom Inspector Panel.
  - **XBOX Controller Compatible** Assign keybinds using your XBOX controller!
- - **Multiplayer Support** Create one configuration file for up to four players!
+ - **Multiplayer Support (Coming Soon)** Create one configuration file for up to four players!
 
 ## Documentation
 
  **Read the docs [here](Assets/CustomInputManager/Docs/).**
 
  **Getting Started Guide [here](Assets/CustomInputManager/Docs/0%20Setup/GettingStarted.md).**
+
+ **View the API Reference [here](Assets/CustomInputManager/Docs/0%20Setup/API.md).**
 
 ## Changelog
 
