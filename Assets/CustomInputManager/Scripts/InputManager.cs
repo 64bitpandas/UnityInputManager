@@ -34,6 +34,9 @@ public class InputManager : MonoBehaviour {
 	///Config file interface
 	private ConfigFileIO config;
 
+	///ButtonState tracking for GetKeyUp and GetKeyDown
+	private bool[] keyPress = new bool[75];
+
 	///Gamepad information
 	private bool playerIndexSet = false;
 	private PlayerIndex playerIndex;
@@ -194,19 +197,43 @@ public class InputManager : MonoBehaviour {
 			result = GamepadStates.ToAxisValue(GetAxisName(name), state);
 
 		if (result == 0f)
-			result = 	(GamepadStates.ToButtonState(GetAxisNegative(name), state)== ButtonState.Pressed)? -1f : 
-						(GamepadStates.ToButtonState(GetAxisPositive(name), state)== ButtonState.Pressed)? 1f : 0f;
+			result = (GamepadStates.ToButtonState(GetAxisNegative(name), state)== ButtonState.Pressed)? -1f :
+			(GamepadStates.ToButtonState(GetAxisPositive(name), state)== ButtonState.Pressed)? 1f : 0f;
 
 		return result;
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
+		//Controller detected
+		if (config.controlList.GetKeybind(name).HasControllerInput()&& state.IsConnected)
+			if (GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)== ButtonState.Pressed) {
+				if (keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)])
+					return false;
+
+				keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = true;
+				return true;
+			}
+		else
+			keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = false;
+
 		return Input.GetKeyDown(GetKeyCode(name).ToLower());
 	}
 
 	///<summary> Returns true on the given key's release</summary>
 	public bool GetKeyUp(string name) {
+		//Controller detected
+		if (config.controlList.GetKeybind(name).HasControllerInput()&& state.IsConnected)
+			if (GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)!= ButtonState.Pressed) {
+				if (!keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)])
+					return false;
+
+				keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = false;
+				return true;
+			}
+		else
+			keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = true;
+
 		return Input.GetKeyUp(GetKeyCode(name).ToLower());
 	}
 

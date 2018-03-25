@@ -21,7 +21,7 @@ public class InGame : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+		
 		//Change sprite color to random color when key pressed
 		if(input.GetKeyDown("SampleKey")) {
 			float r = Random.Range(0f, 1f);
