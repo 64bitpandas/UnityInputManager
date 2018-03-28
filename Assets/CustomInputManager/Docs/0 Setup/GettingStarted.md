@@ -16,12 +16,20 @@ Select the object to view the custom Inspector controls for the InputManager scr
 
 ![InputManager Inspector](inputmanager.PNG "Input Manager")
 
-In the default configuration file, each line corresponds to one custom keybind. The format for each line is `ID:Name:KeyCode`. 
- - ID: Numerical identifier, can be any non-negative number. Each keybind must have a unique ID. The ID is for internal bookkeeping purposes but can also be accessed through the API. 
+In the default configuration file, each line corresponds to one custom keybind. The format for each line is `Name:KeyCode:ControllerButton`. 
  - Name: General identifier for the keybind. This is the name that will display on auto-generated keybind buttons, and the name that will be used through the API to get key inputs.
  - KeyCode: Default key input that corresponds to this keybind. You may reference the [Unity API page](https://docs.unity3d.com/ScriptReference/KeyCode.html) for a full list of valid keybinds. This is only for the default configuration, and can be reassigned by the user.
+ - ControllerButton: Name of the controller button you want to map to this keybind. Valid Button names can be found at [Controller IDs](../3%20Controller/ControllerIDs.md). **This is optional!** If you do not support controller input, stop after KeyCode. 
 
- After editing the configuration file, remember to click the "Save Configuration" button in the Inspector to update the database before generating keybind buttons.
+You can also generate axes to bind two keybinds and a controller axis under the same name. The format for an axis is `AXIS:Name:PositiveKey:NegativeKey:ControllerAxis`.
+ - AXIS: That's it. Literally type the word 'AXIS' in front to let the parser know that it is an axis and not a keybind.
+ - AxisName: General identifier for the axis. This is the name that will be used through the API to get key inputs.
+ - PositiveKey: Name of custom keybind to map to positive key of the axis. When this key is pressed down, `GetAxis()` will return 1. **NOTE: You do not use the KeyCode (like 'A' or 'Space')! You use the name of the custom keybind (like 'Jump' or 'Run')!**
+ - NegativeKey: Name of custom keybind to map to negative key of the axis. When this key is pressed down, `GetAxis()` will return -1.
+ - ControllerAxis: Name of the controller button you want to map to this axis. Valid Axis names can be found at [Controller IDs](../3%20Controller/ControllerIDs.md). **This is optional!** If you do not support controller input, stop after KeyCode. 
+
+
+ After editing the configuration file, remember to click the "Save Configuration" button in the Inspector to update the database before generating keybind buttons. 
 
  ### Step Three: Generating Keybind Buttons
  

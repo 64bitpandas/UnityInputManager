@@ -18,6 +18,8 @@ public class GamepadStates {
                 return state.Buttons.Start;
             case "back":
                 return state.Buttons.Back;
+            case "guide":
+                return state.Buttons.Guide;
             case "leftshoulder":
                 return state.Buttons.LeftShoulder;
             case "rightshoulder":
@@ -26,8 +28,6 @@ public class GamepadStates {
                 return state.Buttons.LeftStick;
             case "rightstick":
                 return state.Buttons.RightStick;
-            case "guide":
-                return state.Buttons.Guide;
             case "dpadup":
                 return state.DPad.Up;
             case "dpaddown":
@@ -44,35 +44,35 @@ public class GamepadStates {
     public static int ToButtonID(string stateName) {
         switch (stateName.ToLower()) {
             case "x":
-                return 10;
+                return 0;
             case "y":
-                return 11;
+                return 1;
             case "b":
-                return 12;
+                return 2;
             case "a":
-                return 13;
+                return 3;
             case "start":
-                return 20;
+                return 4;
             case "back":
-                return 21;
-            case "leftshoulder":
-                return 30;
-            case "rightshoulder":
-                return 31;
-            case "leftstick":
-                return 40;
-            case "rightstick":
-                return 41;
+                return 5;
             case "guide":
-                return 22;
+                return 6;
+            case "leftshoulder":
+                return 7;
+            case "rightshoulder":
+                return 8;
+            case "leftstick":
+                return 9;
+            case "rightstick":
+                return 10;
             case "dpadup":
-                return 50;
+                return 11;
             case "dpaddown":
-                return 51;
+                return 12;
             case "dpadleft":
-                return 52;
+                return 13;
             case "dpadright":
-                return 53;
+                return 14;
         }
 
         throw new NullReferenceException("Button " + stateName + " could not be found");
@@ -104,17 +104,17 @@ public class GamepadStates {
         switch (axisName.ToLower()) {
 
             case "lefttrigger":
-                return 60;
+                return 15;
             case "righttrigger":
-                return 61;
+                return 16;
             case "leftstickx":
-                return 70;
+                return 17;
             case "leftsticky":
-                return 71;
+                return 18;
             case "rightstickx":
-                return 72;
+                return 19;
             case "rightsticky":
-                return 73;
+                return 20;
         }
 
         throw new NullReferenceException("Axis " + axisName + " could not be found");
