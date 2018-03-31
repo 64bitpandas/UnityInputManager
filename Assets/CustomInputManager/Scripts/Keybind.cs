@@ -118,6 +118,21 @@ public class KeybindList {
 
             //Set target graphic
             newButton.GetComponent<Button>().targetGraphic = newButton.GetComponent<Image>();
+
+            //Controller Button
+            Button controllerButton = newButton.GetComponentsInChildren<Button>()[1];
+            if(key.HasControllerInput()) {
+                controllerButton.targetGraphic = controllerButton.GetComponent<Image>();
+                controllerButton.GetComponent<InputButton>().buttonName = key.name;
+                controllerButton.tag = "KeybindButton";
+                controllerButton.name = key.name + " - Controller Input";
+                controllerButton.transform.SetParent(newButton.transform.parent);
+
+                //move controller button out of the hierarchy
+
+            }
+            else 
+                GameObject.Destroy(controllerButton);
         }
     }
 

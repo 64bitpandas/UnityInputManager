@@ -119,4 +119,42 @@ public class GamepadStates {
 
         throw new NullReferenceException("Axis " + axisName + " could not be found");
     }
+
+    public static string GetPressedButton(GamePadState state) {
+
+        if(!state.IsConnected)
+            return null;
+        if (state.Buttons.X == ButtonState.Pressed)
+            return "X";
+        if (state.Buttons.Y == ButtonState.Pressed)
+            return "Y";
+        if (state.Buttons.B == ButtonState.Pressed)
+            return "B";
+        if (state.Buttons.A == ButtonState.Pressed)
+            return "A";
+        if (state.Buttons.Start == ButtonState.Pressed)
+            return "Start";
+        if (state.Buttons.Back == ButtonState.Pressed)
+            return "Back";
+        if (state.Buttons.Guide == ButtonState.Pressed)
+            return "Guide";
+        if (state.Buttons.LeftShoulder == ButtonState.Pressed)
+            return "LeftShoulder";
+        if (state.Buttons.RightShoulder == ButtonState.Pressed)
+            return "RightShoulder";
+        if (state.Buttons.LeftStick == ButtonState.Pressed)
+            return "LeftStick";
+        if (state.Buttons.RightStick == ButtonState.Pressed)
+            return "RightStick";
+        if (state.DPad.Up == ButtonState.Pressed)
+            return "DPadUp";
+        if (state.DPad.Down == ButtonState.Pressed)
+            return "DPadDown";
+        if (state.DPad.Left == ButtonState.Pressed)
+            return "DPadLeft";
+        if (state.DPad.Right == ButtonState.Pressed)
+            return "DPadRight";
+
+        return null;
+    }
 }

@@ -97,7 +97,7 @@ public class InputManager : MonoBehaviour {
 				PlayerIndex testPlayerIndex = (PlayerIndex)i;
 				GamePadState testState = GamePad.GetState(testPlayerIndex);
 				if (testState.IsConnected) {
-					Debug.Log(string.Format("GamePad found {0}", testPlayerIndex));
+					print(string.Format("GamePad found {0}", testPlayerIndex));
 					playerIndex = testPlayerIndex;
 					playerIndexSet = true;
 				}
@@ -112,7 +112,6 @@ public class InputManager : MonoBehaviour {
 	///While key is being set: Waits for a valid input
 	public IEnumerator WaitForKey(string name, InputButton btnRef) {
 
-		Debug.Log("Test");
 		//0 is keybind label, 1 is name label
 		Text[] btnTexts = btnRef.GetComponentsInChildren<Text>();
 
@@ -131,13 +130,13 @@ public class InputManager : MonoBehaviour {
 			if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse)) {
 				if (currentEvent.keyCode == cancelKeyCode) {
 					infoText.enabled = false;
-					Debug.Log("Key Selection cancelled");
+					print("Key Selection cancelled");
 					yield break;
 				} else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None) {
 					btnTexts[0].text = currentEvent.keyCode.ToString();
-					Debug.Log("Key Selection successful");
+					print("Key Selection successful");
 					config.controlList.GetKeybind(name).keyCode = btnTexts[0].text;
-					Debug.Log("Set key " + name + " to " + btnTexts[0].text);
+					print("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
 					config.axisList.RefreshList();
 
@@ -150,7 +149,51 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
+	///While controller button is being set: Waits for a valid input
+	public IEnumerator WaitForController(string name, InputButton btnRef) {
+
+		Text btnText = btnRef.GetComponentInChildren<Text>();
+
+		//Text that indicates when selection is occurring
+		Text infoText;
+
+		try {
+			infoText = GameObject.Find("InfoText").GetComponent<Text>();
+			infoText.text = infoTextContent;
+			infoText.enabled = true;
+		} catch {
+			throw new NullReferenceException("InfoText not found! Create a Text object named 'InfoText'.");
+		}
+
+		while (true) {
+			if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse)) {
+				if (currentEvent.keyCode == cancelKeyCode) {
+					infoText.enabled = false;
+					print("Controler Button Selection cancelled");
+					yield break;
+				}
+			} 
+			
+			string currButton = GamepadStates.GetPressedButton(state);
+			if(currButton != null) {
+				print("Controller Button Selection successful");
+				btnText.text = currButton;
+				config.controlList.GetKeybind(name).controllerKeyCode = currButton;
+				print("Set button for " + name + " to " + currButton);
+				infoText.enabled = false;
+				config.axisList.RefreshList();
+				//Save to file
+					config.WriteControls(config.configPath);
+				
+				yield break;
+			}
+
+			yield return null;
+		}
+	}
+
 	public void GenerateButtons() {
+		config = new ConfigFileIO();
 		config.controlList.GenerateButtons();
 	}
 
