@@ -240,8 +240,8 @@ public class InputManager : MonoBehaviour {
 			result = GamepadStates.ToAxisValue(GetAxisName(name), state);
 
 		if (result == 0f)
-			result = (GamepadStates.ToButtonState(GetAxisNegative(name), state)== ButtonState.Pressed)? -1f :
-			(GamepadStates.ToButtonState(GetAxisPositive(name), state)== ButtonState.Pressed)? 1f : 0f;
+			result = (GetKey(GetAxisNegative(name).name)) ? -1f :
+			(GetKey(GetAxisPositive(name).name)) ? 1f : 0f;
 
 		return result;
 	}
@@ -295,14 +295,14 @@ public class InputManager : MonoBehaviour {
 		return config.axisList.GetAxis(name).controllerAxis;
 	}
 
-	///<summary> Returns the KeyCode corresponding to the positive key of the custom axis.</summary>
-	public string GetAxisPositive(string name) {
-		return config.axisList.GetAxis(name).positiveKey.name;
+	///<summary> Returns the Keybind corresponding to the positive key of the custom axis.</summary>
+	public Keybind GetAxisPositive(string name) {
+		return config.axisList.GetAxis(name).positiveKey;
 	}
 
-	///<summary> Returns the KeyCode corresponding to the negative key of the custom axis.</summary>
-	public string GetAxisNegative(string name) {
-		return config.axisList.GetAxis(name).negativeKey.name;
+	///<summary> Returns the Keybind corresponding to the negative key of the custom axis.</summary>
+	public Keybind GetAxisNegative(string name) {
+		return config.axisList.GetAxis(name).negativeKey;
 	}
 
 	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>

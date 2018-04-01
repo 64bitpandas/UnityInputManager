@@ -19,7 +19,7 @@ Select the object to view the custom Inspector controls for the InputManager scr
 In the default configuration file, each line corresponds to one custom keybind. The format for each line is `Name:KeyCode:ControllerButton`. 
  - Name: General identifier for the keybind. This is the name that will display on auto-generated keybind buttons, and the name that will be used through the API to get key inputs.
  - KeyCode: Default key input that corresponds to this keybind. You may reference the [Unity API page](https://docs.unity3d.com/ScriptReference/KeyCode.html) for a full list of valid keybinds. This is only for the default configuration, and can be reassigned by the user.
- - ControllerButton: Name of the controller button you want to map to this keybind. Valid Button names can be found at [Controller IDs](../3%20Controller/ControllerIDs.md). **This is optional!** If you do not support controller input, stop after KeyCode. 
+ - ControllerButton: Name of the controller button you want to map to this keybind. Valid Button names can be found at [Controller IDs](../3%20Controller/ControllerIDs.md). **This is optional!** If you do not support controller input, stop after KeyCode. You also do not want controller buttons if you plan to bind the keybind to an axis, since the controller input will be managed in the axis declaration.
 
 You can also generate axes to bind two keybinds and a controller axis under the same name. The format for an axis is `AXIS:Name:PositiveKey:NegativeKey:ControllerAxis`.
  - AXIS: That's it. Literally type the word 'AXIS' in front to let the parser know that it is an axis and not a keybind.

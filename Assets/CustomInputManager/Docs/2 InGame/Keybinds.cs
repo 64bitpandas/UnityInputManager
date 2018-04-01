@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGame : MonoBehaviour {
+public class Keybinds : MonoBehaviour {
 
 	private InputManager input; //input manager
 	private SpriteRenderer squareSprite; //sprite that is shown on camera

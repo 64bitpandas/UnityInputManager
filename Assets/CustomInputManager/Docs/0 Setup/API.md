@@ -148,9 +148,9 @@ void Start() {
 }
 ```
 
-### `GetAxisPositive(string name) : string`  
+### `GetAxisPositive(string name) : Keybind`  
 
-Returns the KeyCode corresponding to the positive key of the custom axis.
+Returns the Keybind object corresponding to the positive key of the custom axis.
 
 Example:
 ```csharp
@@ -160,13 +160,17 @@ InputManager input = InputManager.GetInputManager();
 
 void Start() {
     //Prints 'D' to the console
-    print(input.GetAxisPositive("Turn"));
+    print(input.GetAxisPositive("Turn").keyCode);
+}
+
+void Update() {
+    transform.Rotate(Vector3.right * input.GetAxis("Turn"));
 }
 ```
 
-### `GetAxisNegative(string name) : string`  
+### `GetAxisNegative(string name) : Keybind`  
 
-Returns the KeyCode corresponding to the negative key of the custom axis.
+Returns the Keybind object corresponding to the negative key of the custom axis.
 
 Example:
 ```csharp
@@ -176,7 +180,11 @@ InputManager input = InputManager.GetInputManager();
 
 void Start() {
     //Prints 'A' to the console
-    print(input.GetAxisNegative("Turn"));
+    print(input.GetAxisNegative("Turn").keyCode);
+}
+
+void Update() {
+    transform.Rotate(Vector3.right * input.GetAxis("Turn"));
 }
 ```
 
