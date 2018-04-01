@@ -10,7 +10,7 @@ You can download the latest release [here](https://github.com/dbqeo/UnityInputMa
 
 ### Step Two: Configuration
 
-Upon import, a folder named 'CustomInputManager' will be created. In order to add the Input Manager to your scene, add 'Scenes/InputManager.cs' into any object that will not be cloned or destroyed.
+Upon import, a folder named 'CustomInputManager' will be created. In order to add the Input Manager to your scene, drag the prefab named **InputManager** from the **Prefabs/** folder inside CustomInputManager. Remember to check or uncheck the "Has Keybind Buttons" toggle depending on if your scene has a controls editing menu or not! (True = has menu, False = no menu)
 
 Select the object to view the custom Inspector controls for the InputManager script. Here, you can open the default configuration file for editing (it will open the file in your default code editor). 
 
@@ -35,6 +35,8 @@ You can also generate axes to bind two keybinds and a controller axis under the 
  
  In your Main Menu or Options scene where you want to insert keybind buttons for users to assign custom configurations, add the InputManager script and the TemplateButton prefab. Additionally, create a Text object titled "InfoText." This will be displayed during keybind assignment to let the user know that they are currently in keybind selection mode, and how to cancel it. There is no need to edit the text content; it will be automatically assigned in script.
  
+ Next, drag the **TemplateButton** prefab from the **CustomInputManager/Prefabs/** folder into your scene and position it where you want your buttons to be generated.
+
  In the Inspector Panel, check the toggle box for "Scene Has Keybind Buttons." This will reveal further options:
   - Cancel Keybind: What key the user should press if they are in keybind selection mode and do not wish to edit the keybind. This will be displayed in the InfoText.
   - Generate Keybind Buttons: This will generate buttons underneath where you placed the TemplateButton. Each will already have the correct title and ID assigned, so the only thing to do is rearrange them wherever you wish. If you want to change the button style, font, etc. you may change them in the TemplateButton and the changes will be reflected in all generated buttons.
@@ -42,8 +44,11 @@ You can also generate axes to bind two keybinds and a controller axis under the 
 
 ### Step Four: Use API In Your Scripts
 
-The InputManager API is very similar to default unity Input interface, with the difference that it is a nonstatic class. Therefore, you can initialize InputManager using the static convenience method in InputManager, `InputManager.GetInputManager()`.
+The InputManager API is very similar to default unity Input interface. You can view the full API [here](./API.md). 
 
+The biggest difference is that the CustomInputManager is a nonstatic script, and must be initialized using the static convenience method in InputManager, `InputManager.GetInputManager()`.
+
+Example:
 ```csharp
 private InputManager input;
 
@@ -51,9 +56,9 @@ private InputManager input;
 
 void Start () {
     input = InputManager.GetInputManager();
+
+    //Do stuff here
 }
 ```
-
-You can view the full API [here](./API.md).
 
 Multiplayer support will be added in the next major update.
