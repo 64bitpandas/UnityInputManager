@@ -20,7 +20,6 @@ public class InputManagerEditor : Editor
         serializedObject.Update();
 
         InputManager input = (InputManager)target;
-        input.LoadControls(input.defaultsPath);
 
         EditorGUI.BeginDisabledGroup(true);
         EditorGUILayout.PropertyField(configPath);
@@ -29,6 +28,7 @@ public class InputManagerEditor : Editor
 
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
         EditorGUILayout.PropertyField(sceneHasKeybindButtons);
+        
 
         if (sceneHasKeybindButtons.boolValue) {
             EditorGUILayout.PropertyField(cancelKeyCode);

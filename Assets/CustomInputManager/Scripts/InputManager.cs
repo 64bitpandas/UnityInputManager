@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
+using XInputDotNetPure;
 
 ///Methods for Control changing menu, with integrated InputManager by Ben C.
 ///Since 2017 December
@@ -27,12 +28,20 @@ public class InputManager : MonoBehaviour {
 	///Text to display in InfoText
 	private string infoTextContent;
 
-	[SerializeField]
-	///Full list of custom keybinds. Initialize with default controls.
-	private KeybindList controlList = new KeybindList();
-
 	///Event for key detection
 	private Event currentEvent;
+
+	///Config file interface
+	private ConfigFileIO config;
+
+	///ButtonState tracking for GetKeyUp and GetKeyDown
+	private bool[] keyPress = new bool[75];
+
+	///Gamepad information
+	private bool playerIndexSet = false;
+	private PlayerIndex playerIndex;
+	private GamePadState state;
+	private GamePadState prevState;
 
 	/*
 	####################
@@ -44,32 +53,14 @@ public class InputManager : MonoBehaviour {
 	/// Awake is called when the script instance is being loaded.
 	/// </summary>
 	void Awake() {
+
+		//Init ConfigFileIO
+		config = new ConfigFileIO();
+		defaultsPath = config.defaultsPath;
+		configPath = config.configPath;
+
 		infoTextContent = "Press " + cancelKeyCode + " to cancel key selection";
-		configPath = Application.dataPath + "/CustomInputManager/Config/controls.cfg";
-		defaultsPath = Application.dataPath + "/CustomInputManager/Config/defaultcontrols.cfg";
 
-		if (!Directory.Exists(Application.dataPath + "/CustomInputManager/Config")) {
-			Debug.Log("Creating Config folder...");
-			AssetDatabase.CreateFolder("Assets/CustomInputManager", "Config");
-		}
-
-		//validate controls file
-		try {
-			LoadControls(configPath);
-			Debug.Log("Successfully loaded controls file");
-		} catch {
-			Debug.Log("Controls file is nonexistent or corrupted. Generating new one...");
-			if (File.Exists(defaultsPath)) {
-				LoadControls(defaultsPath);
-				Debug.Log("Loaded controls from defaultcontrols.cfg");
-			} else {
-				Debug.Log("Default Controls are nonexistent or corrupted. Generating new one...");
-				controlList.addKeybind(0, "SampleKey", "Space");
-				WriteControls(defaultsPath);
-			}
-
-			WriteControls(configPath);
-		}
 	}
 
 	/// <summary>
@@ -95,28 +86,32 @@ public class InputManager : MonoBehaviour {
 		currentEvent = Event.current;
 	}
 
-	///Writes controls from ControlList to the config file.
-	public void WriteControls(string filePath) {
-		using(var writer = new StreamWriter(File.Create(filePath))) {
-			writer.WriteLine(controlList);
+	/// <summary>
+	/// Update is called every frame, if the MonoBehaviour is enabled.
+	/// </summary>
+	void Update() {
+		// Find a PlayerIndex, for a single player game
+		// Will find the first controller that is connected and use it
+		if (!playerIndexSet || !prevState.IsConnected) {
+			for (int i = 0; i < 4; ++i) {
+				PlayerIndex testPlayerIndex = (PlayerIndex)i;
+				GamePadState testState = GamePad.GetState(testPlayerIndex);
+				if (testState.IsConnected) {
+					print(string.Format("GamePad found {0}", testPlayerIndex));
+					playerIndex = testPlayerIndex;
+					playerIndexSet = true;
+				}
+			}
 		}
+
+		prevState = state;
+		state = GamePad.GetState(playerIndex);
 	}
 
-	///Loads controls from the config file to ControlList.
-	public void LoadControls(string filePath) {
-		string[] keys = File.ReadAllLines(filePath);
-		controlList.reset();
-		foreach (string key in keys)
-			if (key.Length > 0)
-				controlList.addKeybind(key);
-
-		// Debug.Log(controlList);
-	}
 
 	///While key is being set: Waits for a valid input
-	public IEnumerator WaitForKey(int id, InputButton btnRef) {
+	public IEnumerator WaitForKey(string name, InputButton btnRef) {
 
-		Debug.Log("Test");
 		//0 is keybind label, 1 is name label
 		Text[] btnTexts = btnRef.GetComponentsInChildren<Text>();
 
@@ -135,17 +130,18 @@ public class InputManager : MonoBehaviour {
 			if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse)) {
 				if (currentEvent.keyCode == cancelKeyCode) {
 					infoText.enabled = false;
-					Debug.Log("Key Selection cancelled");
+					print("Key Selection cancelled");
 					yield break;
 				} else if (currentEvent.keyCode != cancelKeyCode && currentEvent.keyCode != KeyCode.None) {
 					btnTexts[0].text = currentEvent.keyCode.ToString();
-					Debug.Log("Key Selection successful");
-					controlList.getKeybind(id).keyCode = btnTexts[0].text;
-					Debug.Log("Set key " + id + " to " + btnTexts[0].text);
+					print("Key Selection successful");
+					config.controlList.GetKeybind(name).keyCode = btnTexts[0].text;
+					print("Set key " + name + " to " + btnTexts[0].text);
 					infoText.enabled = false;
+					config.axisList.RefreshList();
 
 					//Save to file
-					WriteControls(configPath);
+					config.WriteControls(config.configPath);
 
 					yield break;
 				} else yield return null;
@@ -153,58 +149,164 @@ public class InputManager : MonoBehaviour {
 		}
 	}
 
-	public void GenerateButtons() {
-		controlList.generateButtons();
+	///While controller button is being set: Waits for a valid input
+	public IEnumerator WaitForController(string name, InputButton btnRef) {
+
+		Text btnText = btnRef.GetComponentInChildren<Text>();
+
+		//Text that indicates when selection is occurring
+		Text infoText;
+
+		try {
+			infoText = GameObject.Find("InfoText").GetComponent<Text>();
+			infoText.text = infoTextContent;
+			infoText.enabled = true;
+		} catch {
+			throw new NullReferenceException("InfoText not found! Create a Text object named 'InfoText'.");
+		}
+
+		while (true) {
+			if (currentEvent != null && (currentEvent.isKey || currentEvent.isMouse)) {
+				if (currentEvent.keyCode == cancelKeyCode) {
+					infoText.enabled = false;
+					print("Controler Button Selection cancelled");
+					yield break;
+				}
+			} 
+			
+			string currButton = GamepadStates.GetPressedButton(state);
+			if(currButton != null) {
+				print("Controller Button Selection successful");
+				btnText.text = currButton;
+				config.controlList.GetKeybind(name).controllerKeyCode = currButton;
+				print("Set button for " + name + " to " + currButton);
+				infoText.enabled = false;
+				config.axisList.RefreshList();
+				//Save to file
+					config.WriteControls(config.configPath);
+				
+				yield break;
+			}
+
+			yield return null;
+		}
 	}
 
-    /*
+	public void GenerateButtons() {
+		config = new ConfigFileIO();
+		config.controlList.GenerateButtons();
+	}
+
+	/*
 	#######
 	# API #
 	#######	
 	 */
 
-    /// <summary>
-    /// Returns the Input Manager in the scene 
-    /// Assign to an InputManager object in your script.
-    /// </summary>
-    public static InputManager GetInputManager() {
-        try {
-            return (InputManager)FindObjectOfType(typeof(InputManager));
-        }
-        catch {
-            throw new NullReferenceException("InputManager could not be found!");
-        }
-    }
+	/// <summary>
+	/// Returns the Input Manager in the scene 
+	/// Assign to an InputManager object in your script.
+	/// </summary>
+	public static InputManager GetInputManager() {
+		try {
+			return (InputManager)FindObjectOfType(typeof(InputManager));
+		} catch {
+			throw new NullReferenceException("InputManager could not be found!");
+		}
+	}
 
-	///<summary> Returns true if the given key is pressed down</summary>
+	///<summary> Returns true if the given key or controller button is pressed down</summary>
 	public bool GetKey(string name) {
+
+		if (config.controlList.GetKeybind(name).HasControllerInput()&&
+			state.IsConnected &&
+			GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)== ButtonState.Pressed)
+			return true;
+
 		return Input.GetKey(GetKeyCode(name).ToLower());
+	}
+
+	///<summary>
+	/// Returns the current value of the axis
+	/// 1 = positive key down, -1 = negative key down.
+	/// Joystick/Gamepad axis values will be somewhere in between.
+	/// Joystick is checked first, if joystick returns zero or is disconnected, then defaults to keyboard value.
+	///</summary>
+	public float GetAxis(string name) {
+		float result = 0f;
+
+		//gamepad connected
+		if (state.IsConnected)
+			result = GamepadStates.ToAxisValue(GetAxisName(name), state);
+
+		if (result == 0f)
+			result = (GetKey(GetAxisNegative(name).name)) ? -1f :
+			(GetKey(GetAxisPositive(name).name)) ? 1f : 0f;
+
+		return result;
 	}
 
 	///<summary> Returns true on the given key's initial press</summary>
 	public bool GetKeyDown(string name) {
+		//Controller detected
+		if (config.controlList.GetKeybind(name).HasControllerInput()&& state.IsConnected)
+			if (GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)== ButtonState.Pressed) {
+				if (keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)])
+					return false;
+
+				keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = true;
+				return true;
+			}
+		else
+			keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = false;
+
 		return Input.GetKeyDown(GetKeyCode(name).ToLower());
 	}
 
 	///<summary> Returns true on the given key's release</summary>
 	public bool GetKeyUp(string name) {
+		//Controller detected
+		if (config.controlList.GetKeybind(name).HasControllerInput()&& state.IsConnected)
+			if (GamepadStates.ToButtonState(config.controlList.GetKeybind(name).controllerKeyCode, state)!= ButtonState.Pressed) {
+				if (!keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)])
+					return false;
+
+				keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = false;
+				return true;
+			}
+		else
+			keyPress[GamepadStates.ToButtonID(config.controlList.GetKeybind(name).controllerKeyCode)] = true;
+
 		return Input.GetKeyUp(GetKeyCode(name).ToLower());
 	}
 
-    ///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
-    public string GetKeyCode(string name) {
-		return controlList.getKeybind(name).keyCode;
+	///<summary> Returns the KeyCode corresponding to the keybind with given name. No case conversion.</summary>
+	public string GetKeyCode(string name) {
+		return config.controlList.GetKeybind(name).keyCode;
 	}
 
-    ///<summary> Returns the KeyCode corresponding to the keybind with given ID</summary>
-    public string GetKeyCode(int id) {
-		return controlList.getKeybind(id).keyCode;
+	///<summary> Returns the Controller button corresponding to the keybind with given name. No case conversion.</summary>
+	public string GetControllerButton(string name) {
+		return config.controlList.GetKeybind(name).controllerKeyCode;
 	}
 
-    ///<summary> Wipes user preferences and copies default configuration to user configuration</summary>
-    public void ResetControls() {
-		LoadControls(defaultsPath);
-		WriteControls(configPath);
-		Debug.Log("Reset Controls");
+	///<summary> Returns the controller axis corresponding to the custom axis with given name. No case conversion.</summary>
+	public string GetAxisName(string name) {
+		return config.axisList.GetAxis(name).controllerAxis;
+	}
+
+	///<summary> Returns the Keybind corresponding to the positive key of the custom axis.</summary>
+	public Keybind GetAxisPositive(string name) {
+		return config.axisList.GetAxis(name).positiveKey;
+	}
+
+	///<summary> Returns the Keybind corresponding to the negative key of the custom axis.</summary>
+	public Keybind GetAxisNegative(string name) {
+		return config.axisList.GetAxis(name).negativeKey;
+	}
+
+	///<summary> Wipes user preferences and copies default configuration to user configuration</summary>
+	public void ResetControls() {
+		config.ResetControls();
 	}
 }

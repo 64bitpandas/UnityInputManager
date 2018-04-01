@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InGame : MonoBehaviour {
+public class Keybinds : MonoBehaviour {
 
 	private InputManager input; //input manager
 	private SpriteRenderer squareSprite; //sprite that is shown on camera
@@ -16,12 +16,12 @@ public class InGame : MonoBehaviour {
 		squareSprite = (SpriteRenderer)FindObjectOfType(typeof(SpriteRenderer));
 
 		//Assign Text
-		instructionText.text = "Press " + input.GetKeyCode("SampleKey") + " to change color";
+		instructionText.text = "Press " + input.GetKeyCode("SampleKey") + " to change color\n" + "Or press " + input.GetControllerButton("SampleKey") + " on controller";
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+		
 		//Change sprite color to random color when key pressed
 		if(input.GetKeyDown("SampleKey")) {
 			float r = Random.Range(0f, 1f);

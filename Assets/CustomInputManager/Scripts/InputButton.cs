@@ -6,8 +6,11 @@ using UnityEngine.UI;
 ///Attached to every button for keybind assignment in the main menu.
 public class InputButton : MonoBehaviour {
 
-	///Button ID, corresponds to the keybind ID
-	public int id;
+	///Button name, corresponds to the keybind name
+	public string buttonName;
+
+	///Does this correspond to a keyboard key or a controller button?
+	public bool isControllerButton;
 
 	private InputManager input;
 
@@ -15,7 +18,7 @@ public class InputButton : MonoBehaviour {
 	void Start() {
 		//Initialize input manager
 		try {
-			input = GameObject.FindObjectOfType<InputManager>();
+			input = InputManager.GetInputManager();
 		} catch {
 			throw new NullReferenceException("InputManager not found. Did you add it to your scene?");
 		}
@@ -23,17 +26,20 @@ public class InputButton : MonoBehaviour {
 		//Define click action
 		GetComponent<Button>().onClick.AddListener(ClickAction);
 
-		//Get current keybind
-		this.GetComponentInChildren<Text>().text = input.GetKeyCode(id);
-	}
-
-	// Update is called once per frame
-	void Update() {
-
+		//Get current keybind if not a template button
+		if (buttonName.Length > 0) {
+			this.GetComponentInChildren<Text>().text = (isControllerButton) ? input.GetControllerButton(buttonName) : input.GetKeyCode(buttonName);
+		}
+		//Hide the template button
+		else
+			gameObject.SetActive(false);
 	}
 
 	void ClickAction() {
-		StartCoroutine(input.WaitForKey(id, this));
+		if (isControllerButton)
+			StartCoroutine(input.WaitForController(buttonName, this));
+		else
+			StartCoroutine(input.WaitForKey(buttonName, this));
 	}
 
 
