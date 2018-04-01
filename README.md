@@ -9,6 +9,12 @@ Custom input manager that allows users to set custom keybinds during runtime.
  - **XBOX Controller Compatible** Assign keybinds using your XBOX controller!
  - **Multiplayer Support (Coming Soon)** Create one configuration file for up to four players!
 
+## Download
+
+ **Download the latest version (1.1.0) [here](https://github.com/dbqeo/UnityInputManager/releases/tag/v1.1.0)**.
+
+ **[View all releases](https://github.com/dbqeo/UnityInputManager/releases)**
+
 ## Documentation
 
  **Read the docs [here](Assets/CustomInputManager/Docs/).**

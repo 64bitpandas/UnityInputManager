@@ -14,14 +14,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Documentation and examples
 - Keybind button generation
 
-## [1.1.0] - 2018-3-25
+## [1.1.0] - 2018-3-31
 
-### Updated *Unity Package com.dbqeo.inputmanager*.
-
+### Added 
  - Axis Support
  - XBox Controller Support
  - Documentation for axes and controllers
- - Update API reference
+ - Prefabs for TemplateButton and InputManager
+
+### Updated
+ - API reference page
+
+### Removed
+ - Numeric ID in Keybinds
 
 [1.0.0]: https://github.com/dbqeo/UnityInputManager/releases/tag/1.0.0
 [1.1.0]: https://github.com/dbqeo/UnityInputManager/releases/tag/1.1.0
